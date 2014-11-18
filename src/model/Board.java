@@ -10,19 +10,23 @@ public class Board {
 	 * Specify the width of the playing board.
 	 */
 	private final int boardWidth;
+	
 	/**
 	 * Specify the height of the playing board.
 	 */
 	private final int boardHeight;
+	
 	/**
 	 * Specify the number of bombs on the playing board.
 	 */
 	private final int numBombs;
+	
 	/**
 	 * 2-D array filled with Integers where bombs are 9's and near to bombs
 	 * boxes are 1 - 8. 0's are boxes with no neighboring bombs.
 	 */
 	private final int[][] boardBombValues;
+	
 	/**
 	 * 2-D array of boolean values where true boxes are opened and false ones
 	 * are closed. Dimensions of this 2-D array are equal to dimensions of
@@ -185,6 +189,31 @@ public class Board {
 		// call view to refresh.
 	}
 	
+	public int[][] getBoardBombValues()
+	{
+		int[][] result = new int[8][2];
+		for (int i = 0; i < boardBombValues.length; i++)
+		{
+			for (int j = 0; j < boardBombValues[0].length; j++)
+			{
+				result[i][j] = boardBombValues[i][j];
+			}
+		}
+		return result;
+	}
+	
+	public boolean[][] getBoardShowValues()
+	{
+		boolean[][] result = new boolean[8][2];
+		for (int i = 0; i < boardShowValues.length; i++)
+		{
+			for (int j = 0; j < boardShowValues[0].length; j++)
+			{
+				result[i][j] = boardShowValues[i][j];
+			}
+		}
+		return result;
+	}
 	
 	//
 	//
