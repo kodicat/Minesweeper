@@ -191,10 +191,10 @@ public class Board {
 	
 	public int[][] getBoardBombValues()
 	{
-		int[][] result = new int[8][2];
-		for (int i = 0; i < boardBombValues.length; i++)
+		int[][] result = new int[boardHeight][boardWidth];
+		for (int i = 0; i < boardHeight; i++)
 		{
-			for (int j = 0; j < boardBombValues[0].length; j++)
+			for (int j = 0; j < boardWidth; j++)
 			{
 				result[i][j] = boardBombValues[i][j];
 			}
@@ -204,10 +204,10 @@ public class Board {
 	
 	public boolean[][] getBoardShowValues()
 	{
-		boolean[][] result = new boolean[8][2];
-		for (int i = 0; i < boardShowValues.length; i++)
+		boolean[][] result = new boolean[boardHeight][boardWidth];
+		for (int i = 0; i < boardHeight; i++)
 		{
-			for (int j = 0; j < boardShowValues[0].length; j++)
+			for (int j = 0; j < boardWidth; j++)
 			{
 				result[i][j] = boardShowValues[i][j];
 			}
@@ -219,15 +219,6 @@ public class Board {
 	//
 	//
 	//
-	public int[][] getData()
-	{
-		return boardBombValues;
-	}
-	
-	public boolean[][] getShowValues()
-	{
-		return boardShowValues;
-	}
 	
 	public int getBoardLength()
 	{
