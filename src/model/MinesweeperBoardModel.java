@@ -169,7 +169,7 @@ public class MinesweeperBoardModel {
 	 * If its corresponding value in boardBombInnerValues equals to zero (0) it also
 	 * opens (changes from false to true) its neighbors and so on (recursive).
 	 * @param rowIndex The index of the row of the box which was clicked on.
-	 * @param columnIndex the index of the column of the box which was clicked
+	 * @param columnIndex The index of the column of the box which was clicked.
 	 * on.
 	 */
 	public void leftClickAt(int rowIndex, int columnIndex)
@@ -192,6 +192,32 @@ public class MinesweeperBoardModel {
 					}
 					catch (ArrayIndexOutOfBoundsException e) {}
 				}
+			}
+		}
+	}
+	
+	/**
+	 * Change the value of not OPEN box to FLAG, QUESTION or CLOSED according to
+	 * rules. Changes are consequent CLOSED -> FLAG -> QUESTION -> CLOSED ...
+	 * @param rowIndex The index of the row of the box which was clicked on.
+	 * @param columnIndex The index of the column of the box which was clicked.
+	 */
+	public void rightClickAt(int rowIndex, int columnIndex)
+	{
+		int currentShawValue = boardShowOuterValues[rowIndex][columnIndex];
+		if (currentShawValue != OPEN) // cause clicks only on closed boxes.
+		{
+			if (currentShawValue == CLOSED)
+			{
+				boardShowOuterValues[rowIndex][columnIndex] = FLAG;
+			}
+			if (currentShawValue == FLAG)
+			{
+				boardShowOuterValues[rowIndex][columnIndex] = QUESTION;
+			}
+			if (currentShawValue == QUESTION)
+			{
+				boardShowOuterValues[rowIndex][columnIndex] = CLOSED;
 			}
 		}
 	}
@@ -223,7 +249,7 @@ public class MinesweeperBoardModel {
 	 * Get the copy of boardBombInnerValues to use publicly.
 	 * @return 2-D int[][] array, the copy of variable boardBombInnerValues.
 	 */
-	public int[][] getboardBombInnerValues()
+	public int[][] getBoardBombInnerValues()
 	{
 		int[][] result = new int[boardHeight][boardWidth];
 		for (int i = 0; i < boardHeight; i++)
@@ -273,7 +299,7 @@ public class MinesweeperBoardModel {
 	
 	//
 	//
-	//
+	// junk
 	//--------------------------------------------------------------------------
 	
 	public int getBoardLength()
