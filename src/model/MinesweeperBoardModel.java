@@ -222,6 +222,28 @@ public class MinesweeperBoardModel {
 		}
 	}
 	
+	public void bothClickAt(int rowIndex, int columnIndex)
+	{
+		int currentShawValue = boardShowOuterValues[rowIndex][columnIndex];
+		if (currentShawValue == OPEN) // cause clicks only on open boxes.
+		{
+			int[][] neighbors = getNeighbors(rowIndex, columnIndex);
+			for (int[] neighbor: neighbors)
+			{
+				try
+				{
+					int i = neighbor[0] + rowIndex;    // get height coordinate
+					int j = neighbor[1] + columnIndex; // get width coordinate
+					if (boardShowOuterValues[i][j] == CLOSED)
+					{
+						leftClickAt(i, j);
+					}
+				}
+				catch (ArrayIndexOutOfBoundsException e) {}
+			}
+		}
+	}
+	
 	/**
 	 * Get integer value at given row and column indices.
 	 * @param rowIndex row index of needed value
