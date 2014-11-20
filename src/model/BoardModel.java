@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class BoardModel {
 
+	private boolean gameOver;
 	/**
 	 * Specify the width of the playing board.
 	 */
@@ -43,6 +44,7 @@ public class BoardModel {
 	// inner board final values
 	private final int EMPTY = 0;
 	private final int BOMB = 9;
+	private final int RED_BOMB = 10;
 	
 	
 	public BoardModel() {
@@ -50,6 +52,7 @@ public class BoardModel {
 	}
 	
 	public BoardModel(int boardWidth, int boardHeight, int numBombs){
+		gameOver = false;
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
 		boardBombInnerValues = new int[boardHeight][boardWidth];
@@ -76,9 +79,9 @@ public class BoardModel {
 			{
 				int rowIndex = generator.nextInt(boardHeight);
 				int columnIndex = generator.nextInt(boardWidth);
-				if (boardBombInnerValues[rowIndex][columnIndex] != 9)
+				if (boardBombInnerValues[rowIndex][columnIndex] != BOMB)
 				{
-					boardBombInnerValues[rowIndex][columnIndex] = 9;
+					boardBombInnerValues[rowIndex][columnIndex] = BOMB;
 					filled = false;
 				}
 			}
@@ -88,7 +91,7 @@ public class BoardModel {
 		{
 			for (int j = 0; j < boardWidth; j++)
 			{
-				if (boardBombInnerValues[i][j] != 9)
+				if (boardBombInnerValues[i][j] != BOMB)
 				{
 					boardBombInnerValues[i][j] = getNumberOfBombNeighbors(i, j);
 				}
@@ -179,17 +182,22 @@ public class BoardModel {
 		if (currentShawValue != OPEN) // cause clicks only on closed boxes.
 		{
 			boardShowOuterValues[rowIndex][columnIndex] = OPEN;
-			int currentBombValue = boardBombInnerValues[rowIndex][columnIndex];
-			if (currentBombValue == EMPTY) // not even neighbor to a bomb
+			int currentBombValue = getValueAt(rowIndex, columnIndex);
+			if (currentBombValue == BOMB) {
+				openBombs();
+				setValueAt(RED_BOMB, rowIndex, columnIndex);
+				gameOver = true;
+			}
+			if (currentBombValue == EMPTY) // no neighboring bombs near
 			{
 				int[][] neighbors = getNeighbors(rowIndex, columnIndex);
 				for (int[] neighbor: neighbors)
 				{
 					try
 					{
-						int i = neighbor[0]; // get height coordinate
-						int j = neighbor[1]; // get width coordinate
-						leftClickAt(rowIndex + i, columnIndex + j);
+						int i = neighbor[0] + rowIndex; // get height coordinate
+						int j = neighbor[1] + columnIndex; // get width coordinate
+						leftClickAt(i, j);
 					}
 					catch (ArrayIndexOutOfBoundsException e) {}
 				}
@@ -256,8 +264,12 @@ public class BoardModel {
 	 * @param columnIndex column index of needed value
 	 * @return Integer value at given rowIndex and columnIndex.
 	 */
-	public int valueAt(int rowIndex, int columnIndex) {
+	public int getValueAt(int rowIndex, int columnIndex) {
 		return boardBombInnerValues[rowIndex][columnIndex];
+	}
+	
+	public void setValueAt(int value, int rowIndex, int columnIndex) {
+		boardBombInnerValues[rowIndex][columnIndex] = value;
 	}
 	
 	/**
@@ -323,6 +335,11 @@ public class BoardModel {
 	public int getHeight()
 	{
 		return boardHeight;
+	}
+	
+	public boolean isGameOver()
+	{
+		return gameOver;
 	}
 	
 	//
