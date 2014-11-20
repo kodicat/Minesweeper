@@ -34,9 +34,9 @@ public class BoardComponent extends JComponent{
 	
 	private HashMap<Integer, String> getPicturesMap()
 	{
-		int[] keys = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+		int[] keys = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 		String[] values = {"empty", "one", "two", "three", "four", "five", "six",
-				"seven", "eight", "mine"};
+				"seven", "eight", "mine", "red_mine", "wrong"};
 		
 		HashMap<Integer, String> result = new HashMap<Integer, String>();
 		for (int i = 0; i < keys.length; i++)

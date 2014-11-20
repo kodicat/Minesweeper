@@ -1,7 +1,6 @@
 import java.awt.EventQueue;
 import controller.Controller;
 import model.BoardModel;
-import model.SmileModel;
 import view.MainFrame;
 
 
@@ -15,9 +14,8 @@ public class Main {
 			{
 				// model
 				BoardModel board = new BoardModel();
-				SmileModel smile = new SmileModel();
 				// view
-				MainFrame frame = new MainFrame(board, smile);
+				MainFrame frame = new MainFrame(board);
 				// controller
 				Controller controller = new Controller(board, frame);
 				

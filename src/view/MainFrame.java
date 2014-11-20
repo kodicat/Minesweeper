@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -8,9 +9,9 @@ import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import model.BoardModel;
-import model.SmileModel;
 
 public class MainFrame extends JFrame{
 
@@ -18,7 +19,7 @@ public class MainFrame extends JFrame{
 	private BoardComponent field;
 	private SmileComponent smile;
 	
-	public MainFrame(BoardModel board, SmileModel smile)
+	public MainFrame(BoardModel board)
 	{
 		// set the icon of the frame
 		Image img = new ImageIcon("pictures/mine.png").getImage();
@@ -44,10 +45,13 @@ public class MainFrame extends JFrame{
 		// pack this frame with mineComponent
 		BoardComponent bc = new BoardComponent(board);
 		field = bc;
-		SmileComponent sc = new SmileComponent(smile);
+		// create JPanel with FlowLayout to put there smile, timer and bombs
+		SmileComponent sc = new SmileComponent(board);
 		this.smile = sc;
+		JPanel topPanel = new JPanel();
+		topPanel.add(sc);
 		Container contentPane = this.getContentPane();
-		contentPane.add(sc);
+		contentPane.add(topPanel, BorderLayout.NORTH);
 		contentPane.add(bc);
 		this.pack();
 	}
@@ -60,9 +64,14 @@ public class MainFrame extends JFrame{
 		field.removeMouseListener(listener);
 	}
 	
+	public void addSmileMouseListener(MouseListener listener) {
+		smile.addMouseListener(listener);
+	}
+	
 	public void reset()
 	{
 		field.reset();
+		smile.reset();
 	}
 	
 	public int getFieldBoxSize() {

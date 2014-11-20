@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class BoardModel {
 
+	private int currentSmile;
+	
 	private boolean gameOver;
 	/**
 	 * Specify the width of the playing board.
@@ -45,6 +47,14 @@ public class BoardModel {
 	private final int EMPTY = 0;
 	private final int BOMB = 9;
 	private final int RED_BOMB = 10;
+	private final int WRONG = 11;
+	
+	// final variables to indicate smiles
+	private final int SMILE_NORMAL = 0;
+	private final int SMILE_PUSHED = 1;
+	private final int SMILE_DEAD = 2;
+	private final int SMILE_COOL = 3;
+	private final int SMILE_SCARED = 4;
 	
 	
 	public BoardModel() {
@@ -52,6 +62,7 @@ public class BoardModel {
 	}
 	
 	public BoardModel(int boardWidth, int boardHeight, int numBombs){
+		currentSmile = SMILE_NORMAL;
 		gameOver = false;
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
@@ -186,6 +197,7 @@ public class BoardModel {
 			if (currentBombValue == BOMB) {
 				openBombs();
 				setValueAt(RED_BOMB, rowIndex, columnIndex);
+				setCurrentSmile(SMILE_DEAD);
 				gameOver = true;
 			}
 			if (currentBombValue == EMPTY) // no neighboring bombs near
@@ -273,12 +285,20 @@ public class BoardModel {
 	}
 	
 	/**
-	 * Open all the bombs when loosing game.
+	 * Open all the bombs (except flagged ones)  when loosing game.
 	 */
 	public void openBombs() {
 		for (int i = 0; i < boardHeight; i++) {
 			for (int j = 0; j < boardWidth; j++) {
-				if (boardBombInnerValues[i][j] == BOMB) {
+				if (boardBombInnerValues[i][j] == BOMB 
+					&& boardShowOuterValues[i][j] != FLAG)
+				{
+					boardShowOuterValues[i][j] = OPEN;
+				}
+				if (boardBombInnerValues[i][j] != BOMB
+					&& boardShowOuterValues[i][j] == FLAG)
+				{
+					boardBombInnerValues[i][j] = WRONG;
 					boardShowOuterValues[i][j] = OPEN;
 				}
 			}
@@ -340,6 +360,16 @@ public class BoardModel {
 	public boolean isGameOver()
 	{
 		return gameOver;
+	}
+	
+	public int getCurrentSmile()
+	{
+		return currentSmile;
+	}
+	
+	public void setCurrentSmile(int value)
+	{
+		currentSmile = value;
 	}
 	
 	//

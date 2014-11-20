@@ -8,7 +8,7 @@ import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-import model.SmileModel;
+import model.BoardModel;
 
 public class SmileComponent extends JComponent {
 
@@ -16,13 +16,13 @@ public class SmileComponent extends JComponent {
 	
 	private final int SMILE_SIZE = 26;
 	private final String PICTURES_FOLDER = "pictures";
-	private SmileModel smile;
 	private final HashMap<Integer,String> PICTURES_MAP;
+	private BoardModel board;
 	
-	public SmileComponent(SmileModel smile)
+	public SmileComponent(BoardModel board)
 	{
 		setSize(SMILE_SIZE, SMILE_SIZE);
-		this.smile = smile;
+		this.board = board;
 		PICTURES_MAP = getPicturesMap();
 	}
 	
@@ -43,7 +43,7 @@ public class SmileComponent extends JComponent {
 	@Override
 	public void paintComponent(Graphics g)
 	{
-		int key = smile.getCurrentSmile();
+		int key = board.getCurrentSmile();
 		String path = PICTURES_MAP.get(key);
 		Image img = new ImageIcon(path).getImage();
 		g.drawImage(img, 0, 0, SMILE_SIZE, SMILE_SIZE, this);
