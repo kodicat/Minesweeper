@@ -13,7 +13,7 @@ public class Main {
 			public void run()
 			{
 				// model
-				BoardModel board = new BoardModel();
+				BoardModel board = new BoardModel(9, 9, 10);
 				// view
 				MainFrame frame = new MainFrame(board);
 				// controller

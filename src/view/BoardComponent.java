@@ -54,6 +54,7 @@ public class BoardComponent extends JComponent{
 		return BOX_SIZE;
 	}
 	
+	
 	@Override
 	public void paintComponent(Graphics g)
 	{

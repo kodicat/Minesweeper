@@ -28,14 +28,14 @@ public class BoardModel {
 	 * 2-D array filled with Integers where bombs are 9's and near to bombs
 	 * boxes are 1 - 8. 0's are boxes with no neighboring bombs.
 	 */
-	private final int[][] boardBombInnerValues;
+	private int[][] boardBombInnerValues;
 	
 	/**
 	 * 2-D array of integer values which can be 0, 1, 2, 3 (closed, open, flag,
 	 * question). Dimensions of this 2-D array are equal to dimensions of
 	 * boardBombInnerValues.
 	 */
-	private final int[][] boardShowOuterValues;
+	private int[][] boardShowOuterValues;
 	
 	// outer show final values
 	private final int CLOSED = 0;
@@ -57,28 +57,31 @@ public class BoardModel {
 	private final int SMILE_SCARED = 4;
 	
 	
-	public BoardModel() {
-		this(9, 9, 10);
-	}
-	
-	public BoardModel(int boardWidth, int boardHeight, int numBombs){
-		currentSmile = SMILE_NORMAL;
-		gameOver = false;
+	public BoardModel(int boardWidth, int boardHeight, int numBombs) {
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
-		boardBombInnerValues = new int[boardHeight][boardWidth];
-		boardShowOuterValues = new int[boardHeight][boardWidth];
 		this.numBombs = numBombs;
 		
-		fillBoardValues();
+		resetBoardValues();
 	}
 	
+	//==========================================================================
+	// helper methods
+	//==========================================================================
 	/**
-	 * Fill in the variable boardBombInnerValues with bombs (numbers of 9) and bomb
-	 * neighbors (0 - 8 numbers).
+	 * Reset or initiate the board and fill in all the needed values. 
+	 * Fill in the variables boardBombInnerValues with bombs (numbers of 9) and
+	 * bomb neighbors (0 - 8 numbers) and boardShowOuterValues with CLOSED
+	 * initial values (0 int value). Set currentSmile to initial SMILE_NORMAL
+	 * value (0 int value).
 	 */
-	private void fillBoardValues()
+	private void resetBoardValues()
 	{
+		setCurrentSmile(SMILE_NORMAL);
+		gameOver = false;
+		boardBombInnerValues = new int[boardHeight][boardWidth];
+		boardShowOuterValues = new int[boardHeight][boardWidth];
+		
 		Random generator = new Random(new Long(42));
 		
 		// fill bombs (number 9) into boardBombInnerValues
@@ -133,7 +136,7 @@ public class BoardModel {
 		// initiate temporary helper list
 		ArrayList<Integer> lst = new ArrayList<>();
 		// get possible neighbors coordinates in 2_D array.
-		int[][] neighbors = getNeighbors(rowIndex, columnIndex);
+		int[][] neighbors = getPossibleNeighbors(rowIndex, columnIndex);
 		
 		// try adding neighbor values to our temporary helper list if this
 		// neighbor is within the bounds
@@ -158,7 +161,7 @@ public class BoardModel {
 	 * @return Possible (relative to current box) neighbors coordinates 
 	 * in 2-D array as int[8][2].
 	 */
-	private int[][] getNeighbors(int rowIndex, int columnIndex)
+	private int[][] getPossibleNeighbors(int rowIndex, int columnIndex)
 	{
 		int[][] result = new int[8][2];
 		int len = 0;
@@ -177,12 +180,20 @@ public class BoardModel {
 		}
 		return result;
 	}
+	//
+	//==========================================================================
 	
+	
+	
+	//==========================================================================
+	// click event methods
+	//==========================================================================
 	/**
-	 * This method changes the value from false to true in boardShowOuterValues with
-	 * coordinates rowIndex and columnIndex.
-	 * If its corresponding value in boardBombInnerValues equals to zero (0) it also
-	 * opens (changes from false to true) its neighbors and so on (recursive).
+	 * This method changes the value from CLOSED to OPEN in boardShowOuterValues
+	 * with coordinates rowIndex and columnIndex.
+	 * If its corresponding value in boardBombInnerValues equals to BOMB (0) the
+	 * method also opens (changes from CLOSED to OPEN) its neighbors and so on
+	 * (recursive).
 	 * @param rowIndex The index of the row of the box which was clicked on.
 	 * @param columnIndex The index of the column of the box which was clicked.
 	 * on.
@@ -194,25 +205,36 @@ public class BoardModel {
 		{
 			boardShowOuterValues[rowIndex][columnIndex] = OPEN;
 			int currentBombValue = getValueAt(rowIndex, columnIndex);
+			
+			// change variables when lose the game
 			if (currentBombValue == BOMB) {
-				openBombs();
+				openBombs(); // show location of all the bombs
 				setValueAt(RED_BOMB, rowIndex, columnIndex);
 				setCurrentSmile(SMILE_DEAD);
 				gameOver = true;
 			}
-			if (currentBombValue == EMPTY) // no neighboring bombs near
+			// open neighboring boxes when clicked on empty box
+			if (currentBombValue == EMPTY)
 			{
-				int[][] neighbors = getNeighbors(rowIndex, columnIndex);
+				int[][] neighbors = getPossibleNeighbors(rowIndex, columnIndex);
 				for (int[] neighbor: neighbors)
 				{
 					try
 					{
 						int i = neighbor[0] + rowIndex; // get height coordinate
-						int j = neighbor[1] + columnIndex; // get width coordinate
+						int j = neighbor[1] + columnIndex;// get width coordinate
 						leftClickAt(i, j);
 					}
 					catch (ArrayIndexOutOfBoundsException e) {}
 				}
+			}
+			if (wonTheGame())
+			{
+				setCurrentSmile(SMILE_COOL);
+				gameOver = true;
+				// TODO
+				// stop timer
+				// record high score
 			}
 		}
 	}
@@ -253,7 +275,7 @@ public class BoardModel {
 		int currentShawValue = boardShowOuterValues[rowIndex][columnIndex];
 		if (currentShawValue == OPEN) // cause clicks only on open boxes.
 		{
-			int[][] neighbors = getNeighbors(rowIndex, columnIndex);
+			int[][] neighbors = getPossibleNeighbors(rowIndex, columnIndex);
 			for (int[] neighbor: neighbors)
 			{
 				try
@@ -269,6 +291,15 @@ public class BoardModel {
 			}
 		}
 	}
+	/**
+	 * Reset the game
+	 */
+	public void leftClickAtSmile()
+	{
+		resetBoardValues();
+	}
+	//
+	//==========================================================================
 	
 	/**
 	 * Get integer value at given row and column indices.
@@ -370,6 +401,26 @@ public class BoardModel {
 	public void setCurrentSmile(int value)
 	{
 		currentSmile = value;
+	}
+	
+	public boolean wonTheGame()
+	{
+		int notOpened = 0;
+		for (int[] row: boardShowOuterValues)
+		{
+			for (int value: row)
+			{
+				if (value != OPEN)
+				{
+					notOpened++;
+				}
+			}
+		}
+		if (numBombs == notOpened && gameOver == false)
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	//

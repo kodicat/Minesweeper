@@ -1,6 +1,9 @@
 package controller;
 
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
+import java.util.Collections;
+
 import javax.swing.event.MouseInputAdapter;
 import view.MainFrame;
 import model.BoardModel;
@@ -34,15 +37,15 @@ public class Controller {
 
 			if (button == LEFT_CLICK) {
 				board.leftClickAt(rowIndex, columnIndex);
-				if (board.isGameOver() == true) {
-					frame.removeFieldMouseListener(this);
 				}
-			}
 			if (button == RIGHT_CLICK) {
 				board.rightClickAt(rowIndex, columnIndex);
 			}
 			if (button == BOTH_CLICK) {
 				board.bothClickAt(rowIndex, columnIndex);
+			}
+			if (board.isGameOver() == true) {
+				frame.removeFieldMouseListener(this);
 			}
 			frame.reset();
 		}
@@ -50,7 +53,18 @@ public class Controller {
 	
 	public class SmileMouseListener extends MouseInputAdapter {
 		public void mouseClicked(MouseEvent e) {
-			// TODO
+			int button = e.getButton();
+			
+			if (button == LEFT_CLICK)
+			{
+				board.leftClickAtSmile();
+				frame.reset();
+			}
+			// add mouse listener to the frame (board field) when there is none. 
+			if (frame.getNumberOfFieldMouseListeners() == 0)
+			{
+				frame.addFieldMouseListener(new FieldMouseListener());
+			}
 		}
 	}
 }

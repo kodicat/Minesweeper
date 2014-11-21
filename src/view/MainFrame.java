@@ -64,6 +64,11 @@ public class MainFrame extends JFrame{
 		field.removeMouseListener(listener);
 	}
 	
+	public int getNumberOfFieldMouseListeners()
+	{
+		return field.getMouseListeners().length;
+	}
+	
 	public void addSmileMouseListener(MouseListener listener) {
 		smile.addMouseListener(listener);
 	}
