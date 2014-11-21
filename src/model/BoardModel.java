@@ -9,6 +9,8 @@ public class BoardModel {
 	private int currentSmile;
 	
 	private boolean gameOver;
+	
+	private int numberOfNotOpenedBoxes;
 	/**
 	 * Specify the width of the playing board.
 	 */
@@ -51,7 +53,7 @@ public class BoardModel {
 	
 	// final variables to indicate smiles
 	private final int SMILE_NORMAL = 0;
-	private final int SMILE_PUSHED = 1;
+	private final int SMILE_PRESSED = 1;
 	private final int SMILE_DEAD = 2;
 	private final int SMILE_COOL = 3;
 	private final int SMILE_SCARED = 4;
@@ -79,6 +81,7 @@ public class BoardModel {
 	{
 		setCurrentSmile(SMILE_NORMAL);
 		gameOver = false;
+		numberOfNotOpenedBoxes = boardHeight * boardWidth;
 		boardBombInnerValues = new int[boardHeight][boardWidth];
 		boardShowOuterValues = new int[boardHeight][boardWidth];
 		
@@ -205,6 +208,13 @@ public class BoardModel {
 		{
 			boardShowOuterValues[rowIndex][columnIndex] = OPEN;
 			int currentBombValue = getValueAt(rowIndex, columnIndex);
+			numberOfNotOpenedBoxes--;
+			
+			// change scared smile to normal if scared
+			if (getCurrentSmile() == SMILE_SCARED)
+			{
+				setCurrentSmile(SMILE_NORMAL);
+			}
 			
 			// change variables when lose the game
 			if (currentBombValue == BOMB) {
@@ -214,7 +224,7 @@ public class BoardModel {
 				gameOver = true;
 			}
 			// open neighboring boxes when clicked on empty box
-			if (currentBombValue == EMPTY)
+			else if (currentBombValue == EMPTY)
 			{
 				int[][] neighbors = getPossibleNeighbors(rowIndex, columnIndex);
 				for (int[] neighbor: neighbors)
@@ -228,6 +238,11 @@ public class BoardModel {
 					catch (ArrayIndexOutOfBoundsException e) {}
 				}
 			}
+			else if (currentBombValue > 4)
+			{
+				setCurrentSmile(SMILE_SCARED);
+			}
+			
 			if (wonTheGame())
 			{
 				setCurrentSmile(SMILE_COOL);
@@ -236,6 +251,7 @@ public class BoardModel {
 				// stop timer
 				// record high score
 			}
+			
 		}
 	}
 	
@@ -262,6 +278,11 @@ public class BoardModel {
 			{
 				boardShowOuterValues[rowIndex][columnIndex] = CLOSED;
 			}
+		}
+		// change scared smile to normal if scared
+		if (getCurrentSmile() == SMILE_SCARED)
+		{
+			setCurrentSmile(SMILE_NORMAL);
 		}
 	}
 	
@@ -297,6 +318,11 @@ public class BoardModel {
 	public void leftClickAtSmile()
 	{
 		resetBoardValues();
+	}
+	
+	public void pressSmile()
+	{
+		setCurrentSmile(SMILE_PRESSED);
 	}
 	//
 	//==========================================================================
@@ -405,18 +431,7 @@ public class BoardModel {
 	
 	public boolean wonTheGame()
 	{
-		int notOpened = 0;
-		for (int[] row: boardShowOuterValues)
-		{
-			for (int value: row)
-			{
-				if (value != OPEN)
-				{
-					notOpened++;
-				}
-			}
-		}
-		if (numBombs == notOpened && gameOver == false)
+		if (numBombs == numberOfNotOpenedBoxes && gameOver == false)
 		{
 			return true;
 		}

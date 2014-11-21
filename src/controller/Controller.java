@@ -66,5 +66,15 @@ public class Controller {
 				frame.addFieldMouseListener(new FieldMouseListener());
 			}
 		}
+		
+		public void mousePressed(MouseEvent e) {
+			int button = e.getButton();
+			
+			if (button == LEFT_CLICK)
+			{
+				board.pressSmile();
+				frame.reset();
+			}
+		}
 	}
 }
