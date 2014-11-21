@@ -496,7 +496,7 @@ public class GameModel {
 	
 	public void leftReleaseAt(int row, int column) {
 		
-		int firstFloorValue = boardValues3D[row][column][FIRST_FLOOR];
+		int firstFloorValue = boardValues3D[pressedBoxRow][pressedBoxColumn][FIRST_FLOOR];
 		if (firstFloorValue == PRESSED) {
 			boardValues3D[pressedBoxRow][pressedBoxColumn][FIRST_FLOOR] = CLOSED;
 		}
