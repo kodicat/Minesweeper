@@ -21,6 +21,7 @@ public class BoardComponent extends JComponent{
 	private final int OPEN = 1;
 	private final int FLAG = 2;
 	private final int QUESTION = 3;
+	private final int PRESSED = 4;
 	
 	// floor final helper board variables
 	private final int ZERO_FLOOR = 0;
@@ -78,6 +79,9 @@ public class BoardComponent extends JComponent{
 				}
 				if (values[i][j][FIRST_FLOOR] == QUESTION) {
 					path = "pictures/question.png";
+				}
+				if (values[i][j][FIRST_FLOOR] == PRESSED) {
+					path = "pictures/empty.png";
 				}
 				Image img = new ImageIcon(path).getImage();
 				g.drawImage(img, j * BOX_SIZE, i * BOX_SIZE,

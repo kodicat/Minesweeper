@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -95,6 +96,7 @@ public class GameModel {
 	private final int OPEN = 1;
 	private final int FLAG = 2;
 	private final int QUESTION = 3;
+	private final int PRESSED = 4;
 	
 	// right click map
 	private HashMap<Integer,Integer> RIGHT_CLICK_MAP;
@@ -104,6 +106,9 @@ public class GameModel {
 		RIGHT_CLICK_MAP.put(FLAG, QUESTION);
 		RIGHT_CLICK_MAP.put(QUESTION, CLOSED);
 	}
+	
+	int pressedBoxRow;
+	int pressedBoxColumn;
 	//
 	// end of board variables
 	//==========================================================================
@@ -148,6 +153,8 @@ public class GameModel {
 		currentSmile = SMILE_NORMAL;
 		numberOfNotOpenedBoxes = boardHeight * boardWidth;
 		boardValues3D = new int[boardHeight][boardWidth][2];
+		pressedBoxRow = -1;
+		pressedBoxColumn = -1;
 		
 		Random generator = new Random(new Long(42));
 		
@@ -355,11 +362,25 @@ public class GameModel {
 	}
 	
 	/**
-	 * Change picture when press on a smile.
+	 * Change picture when press left button on a smile.
 	 */
 	public void pressSmile() {
 		
 		currentSmile = SMILE_PRESSED;
+	}
+	
+	/**
+	 * Change picture of a smile back when release the button.
+	 */
+	public void releaseSmile(MouseEvent e, int smileSize) {
+		
+		currentSmile = SMILE_NORMAL;
+		
+		// count as click when released in bounds of current smile
+		if (e.getX() >= 0 && e.getX() < smileSize
+				&& e.getY() >= 0 && e.getY() < smileSize) {
+			leftClickAtSmile();
+		}
 	}
 	
 	/**
@@ -460,6 +481,61 @@ public class GameModel {
 					leftClickAt(i, j);
 				}
 			}
+		}
+	}
+	
+	public void leftPressAt(int row, int column) {
+		
+		int firstFloorValue = boardValues3D[row][column][FIRST_FLOOR];
+		if (firstFloorValue == CLOSED) { // cause pressing only on closed boxes
+			pressedBoxRow = row;
+			pressedBoxColumn = column;
+			boardValues3D[row][column][FIRST_FLOOR] = PRESSED;
+		}
+	}
+	
+	public void leftReleaseAt(int row, int column) {
+		
+		int firstFloorValue = boardValues3D[row][column][FIRST_FLOOR];
+		if (firstFloorValue == PRESSED) {
+			boardValues3D[pressedBoxRow][pressedBoxColumn][FIRST_FLOOR] = CLOSED;
+		}
+		
+		// count as click when pressed and released on the same box
+		if (pressedBoxRow == row && pressedBoxColumn == column) {
+			leftClickAt(row, column);
+		}
+	}
+	
+	public void bothPressAt(int row, int column) {
+		
+		int firstFloorValue = boardValues3D[row][column][FIRST_FLOOR];
+		if (firstFloorValue == OPEN) { // cause pressing only on open boxes
+			pressedBoxRow = row;
+			pressedBoxColumn = column;
+			for (ArrayList<Integer> neighbor: getNeighbors(row, column)) {
+				int i = neighbor.get(0);
+				int j = neighbor.get(1);
+				if (boardValues3D[i][j][FIRST_FLOOR] == CLOSED) {
+					boardValues3D[i][j][FIRST_FLOOR] = PRESSED;
+				}
+			}
+		}
+	}
+	
+	public void bothReleaseAt(int row,  int column) {
+		
+		// change pressed boxes to closed (as before)
+		for (ArrayList<Integer> neighbor: getNeighbors(pressedBoxRow, pressedBoxColumn)) {
+			int i = neighbor.get(0);
+			int j = neighbor.get(1);
+			if (boardValues3D[i][j][FIRST_FLOOR] == PRESSED) {
+				boardValues3D[i][j][FIRST_FLOOR] = CLOSED;
+			}
+		}
+		// count as click when pressed and released on the same box
+		if (pressedBoxRow == row && pressedBoxColumn == column) {
+			bothClickAt(row, column);
 		}
 	}
 	//

@@ -16,10 +16,10 @@ import model.GameModel;
 public class MainFrame extends JFrame{
 
 	private static final long serialVersionUID = 42L;
-	private BoardComponent field;
+	private BoardComponent board;
 	private SmileComponent smile;
 	
-	public MainFrame(GameModel board)
+	public MainFrame(GameModel game)
 	{
 		// set the icon of the frame
 		Image img = new ImageIcon("pictures/mine.png").getImage();
@@ -43,10 +43,10 @@ public class MainFrame extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// pack this frame with mineComponent
-		BoardComponent bc = new BoardComponent(board);
-		field = bc;
+		BoardComponent bc = new BoardComponent(game);
+		board = bc;
 		// create JPanel with FlowLayout to put there smile, timer and bombs
-		SmileComponent sc = new SmileComponent(board);
+		SmileComponent sc = new SmileComponent(game);
 		this.smile = sc;
 		JPanel topPanel = new JPanel();
 		topPanel.add(sc);
@@ -57,16 +57,16 @@ public class MainFrame extends JFrame{
 	}
 	
 	public void addFieldMouseListener(MouseListener listener) {
-		field.addMouseListener(listener);
+		board.addMouseListener(listener);
 	}
 	
 	public void removeFieldMouseListener(MouseListener listener) {
-		field.removeMouseListener(listener);
+		board.removeMouseListener(listener);
 	}
 	
 	public int getNumberOfFieldMouseListeners()
 	{
-		return field.getMouseListeners().length;
+		return board.getMouseListeners().length;
 	}
 	
 	public void addSmileMouseListener(MouseListener listener) {
@@ -75,11 +75,15 @@ public class MainFrame extends JFrame{
 	
 	public void reset()
 	{
-		field.reset();
+		board.reset();
 		smile.reset();
 	}
 	
 	public int getFieldBoxSize() {
-		return field.getBoxSize();
+		return board.getBoxSize();
+	}
+	
+	public int getSmileSize() {
+		return smile.getSmileSize();
 	}
 }

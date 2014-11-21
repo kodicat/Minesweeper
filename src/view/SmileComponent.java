@@ -58,4 +58,8 @@ public class SmileComponent extends JComponent {
 	public void reset()	{
 		this.repaint();
 	}
+	
+	public int getSmileSize() {
+		return SMILE_SIZE;
+	}
 }
