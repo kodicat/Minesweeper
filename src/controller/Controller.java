@@ -6,11 +6,11 @@ import java.util.Collections;
 
 import javax.swing.event.MouseInputAdapter;
 import view.MainFrame;
-import model.BoardModel;
+import model.GameModel;
 
 public class Controller {
 
-	private BoardModel board;
+	private GameModel board;
 	private MainFrame frame;
 	
 	// final click variables
@@ -19,7 +19,7 @@ public class Controller {
 	private final int RIGHT_CLICK = 3;
 	
 	
-	public Controller(BoardModel board, MainFrame frame)
+	public Controller(GameModel board, MainFrame frame)
 	{
 		this.board = board;
 		this.frame = frame;

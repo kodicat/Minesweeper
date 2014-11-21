@@ -8,7 +8,7 @@ import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-import model.BoardModel;
+import model.GameModel;
 
 public class SmileComponent extends JComponent {
 
@@ -17,9 +17,9 @@ public class SmileComponent extends JComponent {
 	private final int SMILE_SIZE = 26;
 	private final String PICTURES_FOLDER = "pictures";
 	private final HashMap<Integer,String> PICTURES_MAP;
-	private BoardModel board;
+	private GameModel board;
 	
-	public SmileComponent(BoardModel board)
+	public SmileComponent(GameModel board)
 	{
 		setSize(SMILE_SIZE, SMILE_SIZE);
 		this.board = board;

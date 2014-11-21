@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import model.BoardModel;
+import model.GameModel;
 
 public class MainFrame extends JFrame{
 
@@ -19,7 +19,7 @@ public class MainFrame extends JFrame{
 	private BoardComponent field;
 	private SmileComponent smile;
 	
-	public MainFrame(BoardModel board)
+	public MainFrame(GameModel board)
 	{
 		// set the icon of the frame
 		Image img = new ImageIcon("pictures/mine.png").getImage();

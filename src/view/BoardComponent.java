@@ -6,14 +6,14 @@ import java.awt.Image;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import model.BoardModel;
+import model.GameModel;
 
 public class BoardComponent extends JComponent{
 
 	private static final long serialVersionUID = 42L;
 	private final int BOX_SIZE = 16;
 	private final String PICTURES_FOLDER = "pictures";
-	private BoardModel board;
+	private GameModel board;
 	private final HashMap<Integer,String> PICTURES_MAP;
 	
 	// show state final variables
@@ -22,7 +22,11 @@ public class BoardComponent extends JComponent{
 	private final int FLAG = 2;
 	private final int QUESTION = 3;
 	
-	public BoardComponent(BoardModel board)
+	// floor final helper board variables
+	private final int ZERO_FLOOR = 0;
+	private final int FIRST_FLOOR = 1;
+	
+	public BoardComponent(GameModel board)
 	{
 		this.board = board;
 		int boardWidth = board.getWidth();
@@ -58,29 +62,26 @@ public class BoardComponent extends JComponent{
 	@Override
 	public void paintComponent(Graphics g)
 	{
-		int[][] values = board.getBoardBombInnerValues();
-		int[][] show = board.getBoardShowOuterValues();
-		for (int i = 0; i < board.getHeight(); i++)
-		{
-			for (int j = 0; j < board.getWidth(); j++)
-			{
+		int[][][] values = board.getBoardValues();
+		for (int i = 0; i < board.getHeight(); i++) {
+			for (int j = 0; j < board.getWidth(); j++) {
 				String path = "";
-				if (show[i][j] == CLOSED) {
-					path = "pictures/closed_tile.png";
+				if (values[i][j][FIRST_FLOOR] == CLOSED) {
+					path = "pictures/closed_box.png";
 				}
-				if (show[i][j] == OPEN) {
+				if (values[i][j][FIRST_FLOOR] == OPEN) {
 					// get the path to the file with picture
-					path = PICTURES_MAP.get(values[i][j]);
+					path = PICTURES_MAP.get(values[i][j][ZERO_FLOOR]);
 				}
-				if (show[i][j] == FLAG) {
+				if (values[i][j][FIRST_FLOOR] == FLAG) {
 					path = "pictures/flag.png";
 				}
-				if (show[i][j] == QUESTION) {
+				if (values[i][j][FIRST_FLOOR] == QUESTION) {
 					path = "pictures/question.png";
 				}
 				Image img = new ImageIcon(path).getImage();
 				g.drawImage(img, j * BOX_SIZE, i * BOX_SIZE,
-						BOX_SIZE, BOX_SIZE, this);
+							BOX_SIZE, BOX_SIZE, this);
 			}
 		}
 	}
