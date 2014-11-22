@@ -578,9 +578,20 @@ public class GameModel {
 		return finishedGame;
 	}
 	
-	public int getCurrentSmile()
-	{
+	public int getCurrentSmile() {
 		return currentSmile;
+	}
+	
+	public int bombsToShow() {
+		int flagsOnBoard = 0;
+		for (int i = 0; i < boardHeight; i++) {
+			for (int j = 0; j < boardWidth; j++) {
+				if (boardValues3D[i][j][FIRST_FLOOR] == FLAG); {
+					flagsOnBoard++;
+				}
+			}
+		}
+		return numBombs - flagsOnBoard;
 	}
 	//
 	// end of public methods

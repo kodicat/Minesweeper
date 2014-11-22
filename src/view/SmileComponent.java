@@ -17,12 +17,12 @@ public class SmileComponent extends JComponent {
 	private final int SMILE_SIZE = 26;
 	private final String PICTURES_FOLDER = "pictures";
 	private final HashMap<Integer,String> PICTURES_MAP;
-	private GameModel board;
+	private GameModel model;
 	
-	public SmileComponent(GameModel board)
+	public SmileComponent(GameModel model)
 	{
 		setSize(SMILE_SIZE, SMILE_SIZE);
-		this.board = board;
+		this.model = model;
 		PICTURES_MAP = getPicturesMap();
 	}
 	
@@ -43,7 +43,7 @@ public class SmileComponent extends JComponent {
 	@Override
 	public void paintComponent(Graphics g)
 	{
-		int key = board.getCurrentSmile();
+		int key = model.getCurrentSmile();
 		String path = PICTURES_MAP.get(key);
 		Image img = new ImageIcon(path).getImage();
 		g.drawImage(img, 0, 0, SMILE_SIZE, SMILE_SIZE, this);

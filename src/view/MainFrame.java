@@ -19,7 +19,7 @@ public class MainFrame extends JFrame{
 	private BoardComponent board;
 	private SmileComponent smile;
 	
-	public MainFrame(GameModel game)
+	public MainFrame(GameModel model)
 	{
 		// set the icon of the frame
 		Image img = new ImageIcon("pictures/mine.png").getImage();
@@ -43,10 +43,10 @@ public class MainFrame extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// pack this frame with mineComponent
-		BoardComponent bc = new BoardComponent(game);
+		BoardComponent bc = new BoardComponent(model);
 		board = bc;
 		// create JPanel with FlowLayout to put there smile, timer and bombs
-		SmileComponent sc = new SmileComponent(game);
+		SmileComponent sc = new SmileComponent(model);
 		this.smile = sc;
 		JPanel topPanel = new JPanel();
 		topPanel.add(sc);
@@ -56,7 +56,7 @@ public class MainFrame extends JFrame{
 		this.pack();
 	}
 	
-	public void addFieldMouseListener(MouseListener listener) {
+	public void addBoardMouseListener(MouseListener listener) {
 		board.addMouseListener(listener);
 	}
 	

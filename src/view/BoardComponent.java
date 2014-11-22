@@ -13,7 +13,7 @@ public class BoardComponent extends JComponent{
 	private static final long serialVersionUID = 42L;
 	private final int BOX_SIZE = 16;
 	private final String PICTURES_FOLDER = "pictures";
-	private GameModel board;
+	private GameModel model;
 	private final HashMap<Integer,String> PICTURES_MAP;
 	
 	// show state final variables
@@ -27,11 +27,11 @@ public class BoardComponent extends JComponent{
 	private final int ZERO_FLOOR = 0;
 	private final int FIRST_FLOOR = 1;
 	
-	public BoardComponent(GameModel board)
+	public BoardComponent(GameModel model)
 	{
-		this.board = board;
-		int boardWidth = board.getWidth();
-		int boardHeight = board.getHeight();
+		this.model = model;
+		int boardWidth = model.getWidth();
+		int boardHeight = model.getHeight();
 		PICTURES_MAP = getPicturesMap();
 		
 		setSize(boardWidth * BOX_SIZE, boardHeight * BOX_SIZE);
@@ -63,9 +63,9 @@ public class BoardComponent extends JComponent{
 	@Override
 	public void paintComponent(Graphics g)
 	{
-		int[][][] values = board.getBoardValues();
-		for (int i = 0; i < board.getHeight(); i++) {
-			for (int j = 0; j < board.getWidth(); j++) {
+		int[][][] values = model.getBoardValues();
+		for (int i = 0; i < model.getHeight(); i++) {
+			for (int j = 0; j < model.getWidth(); j++) {
 				String path = "";
 				if (values[i][j][FIRST_FLOOR] == CLOSED) {
 					path = "pictures/closed_box.png";

@@ -7,8 +7,8 @@ import model.GameModel;
 
 public class Controller {
 
-	private GameModel board;
-	private MainFrame frame;
+	private GameModel model;
+	private MainFrame view;
 	
 	// final click variables
 	private final int LEFT_CLICK = 1;
@@ -16,69 +16,69 @@ public class Controller {
 	private final int RIGHT_CLICK = 3;
 	
 	
-	public Controller(GameModel board, MainFrame frame)
+	public Controller(GameModel model, MainFrame view)
 	{
-		this.board = board;
-		this.frame = frame;
+		this.model = model;
+		this.view = view;
 		
-		frame.addFieldMouseListener(new FieldMouseListener());
-		frame.addSmileMouseListener(new SmileMouseListener());
+		view.addBoardMouseListener(new BoardMouseListener());
+		view.addSmileMouseListener(new SmileMouseListener());
 	}
 	
-	public class FieldMouseListener extends MouseInputAdapter {
+	public class BoardMouseListener extends MouseInputAdapter {
 		
 		public void mouseClicked(MouseEvent e) {
 			
-			int boxSize = frame.getFieldBoxSize();
+			int boxSize = view.getFieldBoxSize();
 			int columnIndex = e.getX() / boxSize;
 			int rowIndex = e.getY() / boxSize;
 			int button = e.getButton();
 
 			if (button == LEFT_CLICK) {
-				board.leftClickAt(rowIndex, columnIndex);
+				model.leftClickAt(rowIndex, columnIndex);
 				}
 			if (button == RIGHT_CLICK) {
-				board.rightClickAt(rowIndex, columnIndex);
+				model.rightClickAt(rowIndex, columnIndex);
 			}
 			if (button == BOTH_CLICK) {
-				board.bothClickAt(rowIndex, columnIndex);
+				model.bothClickAt(rowIndex, columnIndex);
 			}
-			if (board.isGameOver() == true) {
-				frame.removeFieldMouseListener(this);
+			if (model.isGameOver() == true) {
+				view.removeFieldMouseListener(this);
 			}
-			frame.reset();
+			view.reset();
 		}
 		
 		public void mousePressed(MouseEvent e) {
 			
-			int boxSize = frame.getFieldBoxSize();
+			int boxSize = view.getFieldBoxSize();
 			int columnIndex = e.getX() / boxSize;
 			int rowIndex = e.getY() / boxSize;
 			int button = e.getButton();
 
 			if (button == LEFT_CLICK) {
-				board.leftPressAt(rowIndex, columnIndex);
+				model.leftPressAt(rowIndex, columnIndex);
 				}
 			if (button == BOTH_CLICK) {
-				board.bothPressAt(rowIndex, columnIndex);
+				model.bothPressAt(rowIndex, columnIndex);
 			}
-			frame.reset();
+			view.reset();
 		}
 		
 		public void mouseReleased(MouseEvent e) {
 			
-			int boxSize = frame.getFieldBoxSize();
+			int boxSize = view.getFieldBoxSize();
 			int columnIndex = e.getX() / boxSize;
 			int rowIndex = e.getY() / boxSize;
 			int button = e.getButton();
 
 			if (button == LEFT_CLICK) {
-				board.leftReleaseAt(rowIndex, columnIndex);
+				model.leftReleaseAt(rowIndex, columnIndex);
 				}
 			if (button == BOTH_CLICK) {
-				board.bothReleaseAt(rowIndex, columnIndex);
+				model.bothReleaseAt(rowIndex, columnIndex);
 			}
-			frame.reset();
+			view.reset();
 		}
 	}
 	
@@ -90,14 +90,14 @@ public class Controller {
 			
 			if (button == LEFT_CLICK)
 			{
-				board.leftClickAtSmile();
+				model.leftClickAtSmile();
 			}
 			// add mouse listener to the frame (board field) when there is none. 
-			if (frame.getNumberOfFieldMouseListeners() == 0)
+			if (view.getNumberOfFieldMouseListeners() == 0)
 			{
-				frame.addFieldMouseListener(new FieldMouseListener());
+				view.addBoardMouseListener(new BoardMouseListener());
 			}
-			frame.reset();
+			view.reset();
 		}
 		
 		public void mousePressed(MouseEvent e) {
@@ -106,18 +106,19 @@ public class Controller {
 			
 			if (button == LEFT_CLICK)
 			{
-				board.pressSmile();
+				model.pressSmile();
 			}
-			frame.reset();
+			view.reset();
 		}
 		
 		public void mouseReleased(MouseEvent e) {
+			
 			int button = e.getButton();
 			
 			if (button == LEFT_CLICK) {
-				board.releaseSmile(e, frame.getSmileSize());
+				model.releaseSmile(e, view.getSmileSize());
 			}
-			frame.reset();
+			view.reset();
 		}
 	}
 }

@@ -13,13 +13,13 @@ public class Main {
 			public void run()
 			{
 				// model
-				GameModel board = new GameModel(9, 9, 10);
+				GameModel model = new GameModel(9, 9, 10);
 				// view
-				MainFrame frame = new MainFrame(board);
+				MainFrame view = new MainFrame(model);
 				// controller
-				Controller controller = new Controller(board, frame);
+				Controller controller = new Controller(model, view);
 				
-				frame.setVisible(true);
+				view.setVisible(true);
 			}
 		});
 	}
