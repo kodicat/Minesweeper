@@ -106,7 +106,6 @@ public class Controller {
 			
 			int button = e.getButton();
 			int X = e.getX();
-			System.out.println(X);
 			// add constraints for X axis because of SpringLayout enlargements
 			if (button == LEFT_CLICK && X > 0 && X < SMILE_SIZE) {
 				model.pressSmile();
