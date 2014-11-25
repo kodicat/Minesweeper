@@ -12,7 +12,7 @@ public class BoardComponent extends JComponent{
 
 	private static final long serialVersionUID = 42L;
 	private final int BOX_SIZE = 16;
-	private final String PICTURES_FOLDER = "pictures";
+	private final String PICTURES_FOLDER = "pictures/board/";
 	private GameModel model;
 	private final HashMap<Integer,String> PICTURES_MAP;
 	
@@ -37,16 +37,13 @@ public class BoardComponent extends JComponent{
 		setSize(boardWidth * BOX_SIZE, boardHeight * BOX_SIZE);
 	}
 	
-	private HashMap<Integer, String> getPicturesMap()
-	{
+	private HashMap<Integer, String> getPicturesMap() {
 		int[] keys = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 		String[] values = {"empty", "one", "two", "three", "four", "five", "six",
 				"seven", "eight", "mine", "red_mine", "wrong"};
-		
 		HashMap<Integer, String> result = new HashMap<Integer, String>();
-		for (int i = 0; i < keys.length; i++)
-		{
-			result.put(keys[i], PICTURES_FOLDER + "/" + values[i] + ".png");
+		for (int i = 0; i < keys.length; i++) {
+			result.put(keys[i], PICTURES_FOLDER + values[i] + ".png");
 		}
 		return result;
 	}
@@ -68,20 +65,20 @@ public class BoardComponent extends JComponent{
 			for (int j = 0; j < model.getWidth(); j++) {
 				String path = "";
 				if (values[i][j][FIRST_FLOOR] == CLOSED) {
-					path = "pictures/closed_box.png";
+					path = PICTURES_FOLDER + "closed_box.png";
 				}
 				if (values[i][j][FIRST_FLOOR] == OPEN) {
 					// get the path to the file with picture
 					path = PICTURES_MAP.get(values[i][j][ZERO_FLOOR]);
 				}
 				if (values[i][j][FIRST_FLOOR] == FLAG) {
-					path = "pictures/flag.png";
+					path = PICTURES_FOLDER + "flag.png";
 				}
 				if (values[i][j][FIRST_FLOOR] == QUESTION) {
-					path = "pictures/question.png";
+					path = PICTURES_FOLDER + "question.png";
 				}
 				if (values[i][j][FIRST_FLOOR] == PRESSED) {
-					path = "pictures/empty.png";
+					path = PICTURES_FOLDER + "empty.png";
 				}
 				Image img = new ImageIcon(path).getImage();
 				g.drawImage(img, j * BOX_SIZE, i * BOX_SIZE,
@@ -91,8 +88,7 @@ public class BoardComponent extends JComponent{
 	}
 	
 	@Override
-	public Dimension getPreferredSize()
-	{
+	public Dimension getPreferredSize() {
 		return getSize();
 	}
 }

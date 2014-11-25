@@ -403,10 +403,10 @@ public class GameModel {
 			// count that we opened one box
 			numberOfNotOpenedBoxes--;
 			
-			// change scared smile to normal if it was scared
-			if (currentSmile == SMILE_SCARED) {
-				currentSmile = SMILE_NORMAL;
-			}
+//			// change scared smile to normal if it was scared
+//			if (currentSmile == SMILE_SCARED) {
+//				currentSmile = SMILE_NORMAL;
+//			}
 			
 			// change variables when lose the game
 			if (zeroFloorValue == BOMB) {
@@ -425,10 +425,10 @@ public class GameModel {
 					leftClickAt(i, j);
 				}
 			}
-			// scared smile on many bombs near
-			else if (zeroFloorValue > 4) {
-				currentSmile = SMILE_SCARED;
-			}
+//			// scared smile on many bombs near
+//			else if (zeroFloorValue > 4) {
+//				currentSmile = SMILE_SCARED;
+//			}
 			
 			if (wonTheGame()) {
 				currentSmile = SMILE_COOL;
@@ -455,10 +455,10 @@ public class GameModel {
 			boardValues3D[row][column][FIRST_FLOOR] = changeTo;
 		}
 		
-		// change scared smile to normal if scared
-		if (currentSmile == SMILE_SCARED) {
-			currentSmile = SMILE_NORMAL;
-		}
+//		// change scared smile to normal if scared
+//		if (currentSmile == SMILE_SCARED) {
+//			currentSmile = SMILE_NORMAL;
+//		}
 	}
 	
 	/**
@@ -523,7 +523,7 @@ public class GameModel {
 		}
 	}
 	
-	public void bothReleaseAt(int row,  int column) {
+	public void bothReleaseAt(int row, int column) {
 		
 		// change pressed boxes to closed (as before)
 		for (ArrayList<Integer> neighbor: getNeighbors(pressedBoxRow, pressedBoxColumn)) {
@@ -564,7 +564,6 @@ public class GameModel {
 	}
 	
 	public int getWidth() {
-		
 		return boardWidth;
 	}
 	
@@ -582,16 +581,17 @@ public class GameModel {
 		return currentSmile;
 	}
 	
+	
 	public int bombsToShow() {
 		int flagsOnBoard = 0;
 		for (int i = 0; i < boardHeight; i++) {
 			for (int j = 0; j < boardWidth; j++) {
-				if (boardValues3D[i][j][FIRST_FLOOR] == FLAG); {
+				if (boardValues3D[i][j][FIRST_FLOOR] == FLAG) {
 					flagsOnBoard++;
 				}
 			}
 		}
-		return numBombs - flagsOnBoard;
+		return Math.min(Math.max(numBombs - flagsOnBoard, -99), 999);
 	}
 	//
 	// end of public methods

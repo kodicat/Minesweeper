@@ -1,4 +1,6 @@
 import java.awt.EventQueue;
+import java.io.IOException;
+
 import controller.Controller;
 import model.GameModel;
 import view.MainFrame;
@@ -15,7 +17,13 @@ public class Main {
 				// model
 				GameModel model = new GameModel(9, 9, 10);
 				// view
-				MainFrame view = new MainFrame(model);
+				MainFrame view = null;
+				try {
+					view = new MainFrame(model);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				// controller
 				Controller controller = new Controller(model, view);
 				

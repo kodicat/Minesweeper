@@ -15,15 +15,15 @@ public class SmileComponent extends JComponent {
 	private static final long serialVersionUID = 42L;
 	
 	private final int SMILE_SIZE = 26;
-	private final String PICTURES_FOLDER = "pictures";
+	private final String PICTURES_FOLDER = "pictures/smile/";
 	private final HashMap<Integer,String> PICTURES_MAP;
 	private GameModel model;
 	
 	public SmileComponent(GameModel model)
 	{
-		setSize(SMILE_SIZE, SMILE_SIZE);
 		this.model = model;
 		PICTURES_MAP = getPicturesMap();
+		setSize(SMILE_SIZE, SMILE_SIZE);
 	}
 	
 	private HashMap<Integer, String> getPicturesMap()
@@ -35,7 +35,7 @@ public class SmileComponent extends JComponent {
 		HashMap<Integer, String> result = new HashMap<Integer, String>();
 		for (int i = 0; i < keys.length; i++)
 		{
-			result.put(keys[i], PICTURES_FOLDER + "/" + values[i] + ".gif");
+			result.put(keys[i], PICTURES_FOLDER + values[i] + ".gif");
 		}
 		return result;
 	}
@@ -50,8 +50,7 @@ public class SmileComponent extends JComponent {
 	}
 	
 	@Override
-	public Dimension getPreferredSize()
-	{
+	public Dimension getPreferredSize() {
 		return getSize();
 	}
 	
