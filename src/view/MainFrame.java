@@ -24,7 +24,7 @@ public class MainFrame extends JFrame{
 
 	private static final long serialVersionUID = 42L;
 	private final String PICTURES_FOLDER = "pictures/canvas/";
-	private BoardComponent board;
+	private BoardView board;
 	private DisplayView bombs;
 	private SmileView smile;
 	private DisplayView timer;
@@ -46,7 +46,7 @@ public class MainFrame extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// pack this frame with mineComponent
-		BoardComponent board = new BoardComponent(model);
+		BoardView board = new BoardView(model);
 		this.board = board;
 		
 		// create JPanel with SpringLayout to put there bombs, smile and timer

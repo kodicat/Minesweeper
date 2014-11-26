@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import model.GameModel;
 
-public class BoardComponent extends JComponent{
+public class BoardView extends JComponent{
 
 	private static final long serialVersionUID = 42L;
 	private final int BOX_SIZE = 16;
@@ -27,7 +27,7 @@ public class BoardComponent extends JComponent{
 	private final int ZERO_FLOOR = 0;
 	private final int FIRST_FLOOR = 1;
 	
-	public BoardComponent(GameModel model)
+	public BoardView(GameModel model)
 	{
 		this.model = model;
 		int boardWidth = model.getWidth();
