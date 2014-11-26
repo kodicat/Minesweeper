@@ -17,14 +17,17 @@ public class Controller {
 	private final int SMILE_SIZE;
 	
 	
-	public Controller(GameModel model, MainFrame view)
-	{
+	public Controller(GameModel model, MainFrame view) {
 		this.model = model;
 		this.view = view;
 		SMILE_SIZE = view.getSmileSize();
 		
 		view.addBoardMouseListener(new BoardMouseListener());
 		view.addSmileMouseListener(new SmileMouseListener());
+	}
+	
+	public void tick(String time) {
+		view.resetTimer();
 	}
 	
 	public class BoardMouseListener extends MouseInputAdapter {

@@ -10,7 +10,7 @@ import javax.swing.JComponent;
 
 import model.GameModel;
 
-public class SmileComponent extends JComponent {
+public class SmileView extends JComponent {
 
 	private static final long serialVersionUID = 42L;
 	
@@ -19,7 +19,7 @@ public class SmileComponent extends JComponent {
 	private final HashMap<Integer,String> PICTURES_MAP;
 	private GameModel model;
 	
-	public SmileComponent(GameModel model)
+	public SmileView(GameModel model)
 	{
 		this.model = model;
 		PICTURES_MAP = getPicturesMap();

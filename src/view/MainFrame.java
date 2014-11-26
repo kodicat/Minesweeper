@@ -25,8 +25,9 @@ public class MainFrame extends JFrame{
 	private static final long serialVersionUID = 42L;
 	private final String PICTURES_FOLDER = "pictures/canvas/";
 	private BoardComponent board;
-	private SmileComponent smile;
-	private BombsComponent bombs;
+	private DisplayView bombs;
+	private SmileView smile;
+	private DisplayView timer;
 	private GameModel model;
 	
 	public MainFrame(GameModel model) throws IOException
@@ -49,11 +50,12 @@ public class MainFrame extends JFrame{
 		this.board = board;
 		
 		// create JPanel with SpringLayout to put there bombs, smile and timer
-		BombsComponent bombs = new BombsComponent(model);
-		SmileComponent smile = new SmileComponent(model);
-		BombsComponent timer = new BombsComponent(model);
+		DisplayView bombs = new DisplayView(model, DisplayView.BOMBS);
+		SmileView smile = new SmileView(model);
+		DisplayView timer = new DisplayView(model, DisplayView.TIMER);
 		this.bombs = bombs;
 		this.smile = smile;
+		this.timer = timer;
 		
 		ScorePanel scorePanel = new ScorePanel(bombs, smile, timer);
 		
@@ -126,11 +128,14 @@ public class MainFrame extends JFrame{
 		smile.addMouseListener(listener);
 	}
 	
-	public void reset()
-	{
+	public void reset() {
 		board.reset();
 		smile.reset();
 		bombs.reset();
+	}
+	
+	public void resetTimer() {
+		timer.reset();
 	}
 	
 	public int getFieldBoxSize() {

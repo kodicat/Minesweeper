@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
+import controller.Controller;
+
 
 public class GameModel {
 
@@ -14,7 +16,13 @@ public class GameModel {
 	 */
 	private boolean finishedGame;
 	
+	private Controller controller;
 	
+	private boolean firstClick;
+	
+	private GameTimer timer;
+	
+	private int highScore;
 	
 	//==========================================================================
 	// smile variables
@@ -150,6 +158,7 @@ public class GameModel {
 	private void resetGameValues() {
 		
 		finishedGame = false;
+		firstClick = true;
 		currentSmile = SMILE_NORMAL;
 		numberOfNotOpenedBoxes = boardHeight * boardWidth;
 		boardValues3D = new int[boardHeight][boardWidth][2];
@@ -341,6 +350,18 @@ public class GameModel {
 		}
 		return false;
 	}
+	
+	private String numberToDisplayString(int number) {
+		int positiveNumber = Math.abs(number);
+		String numberString = "" + number;
+		// add zeroes and/or minuses if needed to get three character string
+		if (number / 10 == 0) {
+			numberString = ((number >= 0) ? "00" : "-0") + positiveNumber;
+		} else if (number / 100 == 0) {
+			numberString = ((number >= 0) ? "0" : "-") + positiveNumber;
+		}
+		return numberString;
+	}
 	//
 	// end of private helper methods
 	//==========================================================================
@@ -358,6 +379,7 @@ public class GameModel {
 		
 		if (!isNewGame()) {
 			resetGameValues();
+			timer.cancel();
 		}
 	}
 	
@@ -395,6 +417,12 @@ public class GameModel {
 	 */
 	public void leftClickAt(int row, int column) {
 		
+		if (firstClick) {
+			firstClick = false;
+			GameTimer timer = new GameTimer(controller);
+			this.timer = timer;
+			// TODO not bomb on first click
+		}
 		int firstFloorValue = boardValues3D[row][column][FIRST_FLOOR];
 		if (firstFloorValue == CLOSED) { // cause clicks only on closed boxes
 			boardValues3D[row][column][FIRST_FLOOR] = OPEN;
@@ -414,6 +442,7 @@ public class GameModel {
 				boardValues3D[row][column][ZERO_FLOOR] = RED_BOMB;
 				currentSmile = SMILE_DEAD;
 				finishedGame = true;
+				timer.cancel();
 			}
 			// open neighboring boxes when clicked on empty box
 			else if (zeroFloorValue == EMPTY) {
@@ -433,9 +462,8 @@ public class GameModel {
 			if (wonTheGame()) {
 				currentSmile = SMILE_COOL;
 				finishedGame = true;
-				// TODO
-				// stop timer
-				// record high score
+				timer.cancel();
+				highScore = timer.getTime();
 			}
 			
 		}
@@ -582,7 +610,7 @@ public class GameModel {
 	}
 	
 	
-	public int bombsToShow() {
+	public String bombsToShow() {
 		int flagsOnBoard = 0;
 		for (int i = 0; i < boardHeight; i++) {
 			for (int j = 0; j < boardWidth; j++) {
@@ -591,7 +619,25 @@ public class GameModel {
 				}
 			}
 		}
-		return Math.min(Math.max(numBombs - flagsOnBoard, -99), 999);
+		int numberToShow = Math.min(Math.max(numBombs - flagsOnBoard, -99),999);
+		String numberString = numberToDisplayString(numberToShow);
+		return numberString;
+	}
+	
+	public String timerToShow() {
+		int time = 0;
+		// catch error if timer is not yet initialized
+		try {
+			time = timer.getTime();
+		} catch (NullPointerException e) {}
+		
+		int numberToShow = Math.min(time, 999);
+		String numberString = numberToDisplayString(numberToShow);
+		return numberString;
+	}
+	
+	public void addController(Controller controller) {
+		this.controller = controller;
 	}
 	//
 	// end of public methods

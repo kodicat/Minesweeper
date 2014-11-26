@@ -20,12 +20,11 @@ public class Main {
 				MainFrame view = null;
 				try {
 					view = new MainFrame(model);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} catch (IOException e) {}
 				// controller
 				Controller controller = new Controller(model, view);
+				// add controller to the game
+				model.addController(controller);
 				
 				view.setVisible(true);
 			}
