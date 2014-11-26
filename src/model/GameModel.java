@@ -431,11 +431,6 @@ public class GameModel {
 			// count that we opened one box
 			numberOfNotOpenedBoxes--;
 			
-//			// change scared smile to normal if it was scared
-//			if (currentSmile == SMILE_SCARED) {
-//				currentSmile = SMILE_NORMAL;
-//			}
-			
 			// change variables when lose the game
 			if (zeroFloorValue == BOMB) {
 				openBombs();				// show location of all the bombs
@@ -454,16 +449,19 @@ public class GameModel {
 					leftClickAt(i, j);
 				}
 			}
-//			// scared smile on many bombs near
-//			else if (zeroFloorValue > 4) {
-//				currentSmile = SMILE_SCARED;
-//			}
 			
 			if (wonTheGame()) {
 				currentSmile = SMILE_COOL;
 				finishedGame = true;
 				timer.cancel();
 				highScore = timer.getTime();
+				for (int i = 0; i < boardHeight; i++) {
+					for (int j = 0; j < boardWidth; j++) {
+						if (boardValues3D[i][j][FIRST_FLOOR] == CLOSED) {
+							boardValues3D[i][j][FIRST_FLOOR] = FLAG;
+						}
+					}
+				}
 			}
 			
 		}
@@ -482,11 +480,6 @@ public class GameModel {
 			int changeTo = RIGHT_CLICK_MAP.get(firstFloorValue);
 			boardValues3D[row][column][FIRST_FLOOR] = changeTo;
 		}
-		
-//		// change scared smile to normal if scared
-//		if (currentSmile == SMILE_SCARED) {
-//			currentSmile = SMILE_NORMAL;
-//		}
 	}
 	
 	/**
