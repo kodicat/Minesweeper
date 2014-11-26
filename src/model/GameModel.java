@@ -22,7 +22,7 @@ public class GameModel {
 	
 	private boolean firstClick;
 	
-	private GameTimer timer;
+	private TimerModel timer;
 	
 	private int highScore;
 	
@@ -429,7 +429,7 @@ public class GameModel {
 			
 			fillInBoard(row, column);
 			
-			GameTimer timer = new GameTimer(controller);
+			TimerModel timer = new TimerModel(controller);
 			this.timer = timer;
 		}
 		int firstFloorValue = boardValues3D[row][column][FIRST_FLOOR];

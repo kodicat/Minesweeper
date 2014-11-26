@@ -5,11 +5,11 @@ import java.util.TimerTask;
 
 import controller.Controller;
 
-public class GameTimer extends Timer {
+public class TimerModel extends Timer {
 
 	private int time;
 	
-	public GameTimer(Controller controller) {
+	public TimerModel(Controller controller) {
 		time = 0;
 		Task tickTask = new Task(controller);
 	 	schedule(tickTask, 0L, 1000L);
