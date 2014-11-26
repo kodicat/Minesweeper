@@ -14,7 +14,7 @@ public class SmileView extends JComponent {
 
 	private static final long serialVersionUID = 42L;
 	
-	private final int SMILE_SIZE = 26;
+	public static final int SMILE_SIZE = 26;
 	private final String PICTURES_FOLDER = "pictures/smile/";
 	private final HashMap<Integer,String> PICTURES_MAP;
 	private GameModel model;
@@ -41,8 +41,9 @@ public class SmileView extends JComponent {
 	}
 	
 	@Override
-	public void paintComponent(Graphics g)
-	{
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		
 		int key = model.getCurrentSmile();
 		String path = PICTURES_MAP.get(key);
 		Image img = new ImageIcon(path).getImage();
@@ -52,13 +53,5 @@ public class SmileView extends JComponent {
 	@Override
 	public Dimension getPreferredSize() {
 		return getSize();
-	}
-	
-	public void reset()	{
-		this.repaint();
-	}
-	
-	public int getSmileSize() {
-		return SMILE_SIZE;
 	}
 }

@@ -63,8 +63,4 @@ public class DisplayView extends JComponent {
 	public Dimension getPreferredSize() {
 		return getSize();
 	}
-	
-	public void reset()	{
-		this.repaint();
-	}
 }

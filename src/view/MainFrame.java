@@ -23,11 +23,14 @@ import model.GameModel;
 public class MainFrame extends JFrame{
 
 	private static final long serialVersionUID = 42L;
+	
 	private final String PICTURES_FOLDER = "pictures/canvas/";
+	// view class instances
 	private BoardView board;
 	private DisplayView bombs;
 	private SmileView smile;
 	private DisplayView timer;
+	
 	private GameModel model;
 	
 	public MainFrame(GameModel model) throws IOException
@@ -115,7 +118,7 @@ public class MainFrame extends JFrame{
 		board.addMouseListener(listener);
 	}
 	
-	public void removeFieldMouseListener(MouseListener listener) {
+	public void removeBoardMouseListener(MouseListener listener) {
 		board.removeMouseListener(listener);
 	}
 	
@@ -128,22 +131,14 @@ public class MainFrame extends JFrame{
 		smile.addMouseListener(listener);
 	}
 	
-	public void reset() {
-		board.reset();
-		smile.reset();
-		bombs.reset();
+	public void repaint() {
+		board.repaint();
+		bombs.repaint();
+		smile.repaint();
 	}
 	
-	public void resetTimer() {
-		timer.reset();
-	}
-	
-	public int getFieldBoxSize() {
-		return board.getBoxSize();
-	}
-	
-	public int getSmileSize() {
-		return smile.getSmileSize();
+	public void repaintTimer() {
+		timer.repaint();
 	}
 	
 	private JPanel createHorizontalBorder(String leftPic,

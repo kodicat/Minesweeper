@@ -11,7 +11,8 @@ import model.GameModel;
 public class BoardView extends JComponent{
 
 	private static final long serialVersionUID = 42L;
-	private final int BOX_SIZE = 16;
+	
+	public static final int BOX_SIZE = 16;
 	private final String PICTURES_FOLDER = "pictures/board/";
 	private GameModel model;
 	private final HashMap<Integer,String> PICTURES_MAP;
@@ -52,14 +53,10 @@ public class BoardView extends JComponent{
 		this.repaint();
 	}
 	
-	public int getBoxSize() {
-		return BOX_SIZE;
-	}
-	
-	
 	@Override
-	public void paintComponent(Graphics g)
-	{
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		
 		int[][][] values = model.getBoardValues();
 		for (int i = 0; i < model.getHeight(); i++) {
 			for (int j = 0; j < model.getWidth(); j++) {

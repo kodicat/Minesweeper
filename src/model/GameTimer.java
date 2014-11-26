@@ -15,8 +15,7 @@ public class GameTimer extends Timer {
 	 	schedule(tickTask, 0L, 1000L);
 	}
 	
-	@Override
-	public void cancel() {
+	public void cancelAndCLear() {
 		super.cancel();
 		time = 0;
 	}

@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
+import view.SmileView;
+
 import controller.Controller;
 
 
@@ -168,7 +170,7 @@ public class GameModel {
 	
 	private void fillInBoard(int clickedRow, int clickedColumn) {
 		
-		Random generator = new Random(new Long(42));
+		Random generator = new Random();
 		
 		// fill in zero floor with bombs (BOMB)
 		for (int i = 0; i < numBombs; i++) {
@@ -383,7 +385,7 @@ public class GameModel {
 		
 		if (!isNewGame()) {
 			resetGameValues();
-			timer.cancel();
+			timer.cancelAndCLear();
 			controller.tick();
 		}
 	}
@@ -399,15 +401,15 @@ public class GameModel {
 	/**
 	 * Change picture of a smile back when release the button.
 	 */
-	public void releaseSmile(MouseEvent e, int smileSize) {
+	public void releaseSmile(int X, int Y) {
 		
 		currentSmile = SMILE_NORMAL;
 		
-		// count as click when released in bounds of current smile
-		if (e.getX() >= 0 && e.getX() < smileSize
-				&& e.getY() >= 0 && e.getY() < smileSize) {
+		if (X >= 0 && X <= SmileView.SMILE_SIZE
+				&& Y >= 0 && Y <= SmileView.SMILE_SIZE) {
 			leftClickAtSmile();
 		}
+		
 	}
 	
 	/**
@@ -429,7 +431,6 @@ public class GameModel {
 			
 			GameTimer timer = new GameTimer(controller);
 			this.timer = timer;
-			// TODO not bomb on first click
 		}
 		int firstFloorValue = boardValues3D[row][column][FIRST_FLOOR];
 		if (firstFloorValue == CLOSED) { // cause clicks only on closed boxes
@@ -472,21 +473,6 @@ public class GameModel {
 				}
 			}
 			
-		}
-	}
-	
-	/**
-	 * Change the value of not OPEN box to FLAG, QUESTION or CLOSED according to
-	 * rules. Changes are consequent CLOSED -> FLAG -> QUESTION -> CLOSED ...
-	 * @param row    The index of the row of the box which was clicked on.
-	 * @param column The index of the column of the box which was clicked.
-	 */
-	public void rightClickAt(int row, int column) {
-		
-		int firstFloorValue = boardValues3D[row][column][FIRST_FLOOR];
-		if (firstFloorValue != OPEN) {   // cause clicks only on not open boxes.
-			int changeTo = RIGHT_CLICK_MAP.get(firstFloorValue);
-			boardValues3D[row][column][FIRST_FLOOR] = changeTo;
 		}
 	}
 	
@@ -536,6 +522,14 @@ public class GameModel {
 		// count as click when pressed and released on the same box
 		if (pressedBoxRow == row && pressedBoxColumn == column) {
 			leftClickAt(row, column);
+		}
+	}
+	
+	public void rightPressAt(int row, int column) {
+		int firstFloorValue = boardValues3D[row][column][FIRST_FLOOR];
+		if (firstFloorValue != OPEN) {   // cause clicks only on not open boxes
+			int changeTo = RIGHT_CLICK_MAP.get(firstFloorValue);
+			boardValues3D[row][column][FIRST_FLOOR] = changeTo;
 		}
 	}
 	
@@ -606,7 +600,7 @@ public class GameModel {
 		return boardHeight;
 	}
 	
-	public boolean isGameOver()
+	public boolean isFinishedGame()
 	{
 		return finishedGame;
 	}

@@ -2,7 +2,10 @@ package controller;
 
 import java.awt.event.MouseEvent;
 import javax.swing.event.MouseInputAdapter;
+
+import view.BoardView;
 import view.MainFrame;
+import view.SmileView;
 import model.GameModel;
 
 public class Controller {
@@ -14,67 +17,59 @@ public class Controller {
 	private final int LEFT_CLICK = 1;
 	private final int BOTH_CLICK = 2;
 	private final int RIGHT_CLICK = 3;
-	private final int SMILE_SIZE;
 	
 	
 	public Controller(GameModel model, MainFrame view) {
 		this.model = model;
 		this.view = view;
-		SMILE_SIZE = view.getSmileSize();
 		
 		view.addBoardMouseListener(new BoardMouseListener());
 		view.addSmileMouseListener(new SmileMouseListener());
 	}
 	
 	public void tick() {
-		view.resetTimer();
+		view.repaintTimer();
 	}
 	
-	public class BoardMouseListener extends MouseInputAdapter {
+	private class BoardMouseListener extends MouseInputAdapter {
 		
 		public void mouseClicked(MouseEvent e) {
-			
-			int boxSize = view.getFieldBoxSize();
-			int columnIndex = e.getX() / boxSize;
-			int rowIndex = e.getY() / boxSize;
+			int column = e.getX() / BoardView.BOX_SIZE;
+			int row = e.getY() / BoardView.BOX_SIZE;
 			int button = e.getButton();
 
 			if (button == LEFT_CLICK) {
-				model.leftClickAt(rowIndex, columnIndex);
-				}
-			if (button == RIGHT_CLICK) {
-				model.rightClickAt(rowIndex, columnIndex);
+				model.leftClickAt(row, column);
 			}
 			if (button == BOTH_CLICK) {
-				model.bothClickAt(rowIndex, columnIndex);
+				model.bothClickAt(row, column);
 			}
-			if (model.isGameOver() == true) {
-				view.removeFieldMouseListener(this);
+			if (model.isFinishedGame()) {
+				view.removeBoardMouseListener(this);
 			}
-			view.reset();
+			view.repaint();
 		}
 		
 		public void mousePressed(MouseEvent e) {
-			
-			int boxSize = view.getFieldBoxSize();
-			int columnIndex = e.getX() / boxSize;
-			int rowIndex = e.getY() / boxSize;
+			int column = e.getX() / BoardView.BOX_SIZE;
+			int row = e.getY() / BoardView.BOX_SIZE;
 			int button = e.getButton();
 
 			if (button == LEFT_CLICK) {
-				model.leftPressAt(rowIndex, columnIndex);
+				model.leftPressAt(row, column);
 				}
-			if (button == BOTH_CLICK) {
-				model.bothPressAt(rowIndex, columnIndex);
+			if (button == RIGHT_CLICK) {
+				model.rightPressAt(row, column);
 			}
-			view.reset();
+			if (button == BOTH_CLICK) {
+				model.bothPressAt(row, column);
+			}
+			view.repaint();
 		}
 		
 		public void mouseReleased(MouseEvent e) {
-			
-			int boxSize = view.getFieldBoxSize();
-			int column = e.getX() / boxSize;
-			int row = e.getY() / boxSize;
+			int column = e.getX() / BoardView.BOX_SIZE;
+			int row = e.getY() / BoardView.BOX_SIZE;
 			int button = e.getButton();
 
 			if (button == LEFT_CLICK) {
@@ -83,48 +78,46 @@ public class Controller {
 			if (button == BOTH_CLICK) {
 				model.bothReleaseAt(row, column);
 			}
-			view.reset();
+			view.repaint();
 		}
 	}
 	
-	public class SmileMouseListener extends MouseInputAdapter {
+	private class SmileMouseListener extends MouseInputAdapter {
 		
 		public void mouseClicked(MouseEvent e) {
-			
 			int button = e.getButton();
 			int X = e.getX();
 			// add constraints for X axis because of SpringLayout enlargements
-			if (button == LEFT_CLICK && X > 0 && X < SMILE_SIZE) {
+			if (button == LEFT_CLICK && X > 0 && X < SmileView.SMILE_SIZE) {
+				System.out.println(X);
 				model.leftClickAtSmile();
 			}
 			// add mouse listener to the frame (board field) when there is none. 
-			if (view.getNumberOfFieldMouseListeners() == 0)
-			{
+			if (view.getNumberOfFieldMouseListeners() == 0) {
 				view.addBoardMouseListener(new BoardMouseListener());
 			}
-			view.reset();
+			view.repaint();
 		}
 		
 		public void mousePressed(MouseEvent e) {
-			
 			int button = e.getButton();
 			int X = e.getX();
 			// add constraints for X axis because of SpringLayout enlargements
-			if (button == LEFT_CLICK && X > 0 && X < SMILE_SIZE) {
+			if (button == LEFT_CLICK && X > 0 && X < SmileView.SMILE_SIZE) {
 				model.pressSmile();
 			}
-			view.reset();
+			view.repaint();
 		}
 		
 		public void mouseReleased(MouseEvent e) {
-			
 			int button = e.getButton();
 			int X = e.getX();
+			int Y = e.getY();
 			// add constraints for X axis because of SpringLayout enlargements
-			if (button == LEFT_CLICK && X > 0 && X < SMILE_SIZE) {
-				model.releaseSmile(e, view.getSmileSize());
+			if (button == LEFT_CLICK) {
+				model.releaseSmile(X, Y);
 			}
-			view.reset();
+			view.repaint();
 		}
 	}
 }
