@@ -1,6 +1,5 @@
 package model;
 
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,13 +17,14 @@ public class GameModel {
 	 */
 	private boolean finishedGame;
 	
-	private Controller controller;
-	
+	/**
+	 * True if there was not click on board, false otherwise.
+	 */
 	private boolean firstClick;
 	
 	private TimerModel timer;
-	
-	private int highScore;
+	private Controller controller;
+//	private int highScore;
 	
 	//==========================================================================
 	// smile variables
@@ -385,7 +385,7 @@ public class GameModel {
 		
 		if (!isNewGame()) {
 			resetGameValues();
-			timer.cancelAndCLear();
+			timer.cancelAndClear();
 			controller.tick();
 		}
 	}
@@ -463,7 +463,7 @@ public class GameModel {
 				currentSmile = SMILE_COOL;
 				finishedGame = true;
 				timer.cancel();
-				highScore = timer.getTime();
+//				highScore = timer.getTime();
 				for (int i = 0; i < boardHeight; i++) {
 					for (int j = 0; j < boardWidth; j++) {
 						if (boardValues3D[i][j][FIRST_FLOOR] == CLOSED) {

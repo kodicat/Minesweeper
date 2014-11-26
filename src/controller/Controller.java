@@ -89,7 +89,6 @@ public class Controller {
 			int X = e.getX();
 			// add constraints for X axis because of SpringLayout enlargements
 			if (button == LEFT_CLICK && X > 0 && X < SmileView.SMILE_SIZE) {
-				System.out.println(X);
 				model.leftClickAtSmile();
 			}
 			// add mouse listener to the frame (board field) when there is none. 
