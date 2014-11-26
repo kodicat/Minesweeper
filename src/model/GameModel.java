@@ -512,6 +512,7 @@ public class GameModel {
 			pressedBoxRow = row;
 			pressedBoxColumn = column;
 			boardValues3D[row][column][FIRST_FLOOR] = PRESSED;
+			currentSmile = SMILE_SCARED;
 		}
 	}
 	
@@ -526,6 +527,7 @@ public class GameModel {
 		if (pressedBoxRow == row && pressedBoxColumn == column) {
 			leftClickAt(row, column);
 		}
+		currentSmile = SMILE_NORMAL;
 	}
 	
 	public void bothPressAt(int row, int column) {
@@ -541,6 +543,7 @@ public class GameModel {
 					boardValues3D[i][j][FIRST_FLOOR] = PRESSED;
 				}
 			}
+			currentSmile = SMILE_SCARED;
 		}
 	}
 	
@@ -558,6 +561,7 @@ public class GameModel {
 		if (pressedBoxRow == row && pressedBoxColumn == column) {
 			bothClickAt(row, column);
 		}
+		currentSmile = SMILE_NORMAL;
 	}
 	//
 	// end of click event methods
