@@ -40,7 +40,7 @@ public class MainFrame extends JFrame{
 		setTitle("Minesweeper");
 		
 		// user can't resize the window of the game
-//		setResizable(false);
+		setResizable(false);
 		
 		// close this frame and exit the program
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -164,6 +164,9 @@ public class GameModel {
 		boardValues3D = new int[boardHeight][boardWidth][2];
 		pressedBoxRow = -1;
 		pressedBoxColumn = -1;
+	}
+	
+	private void fillInBoard(int clickedRow, int clickedColumn) {
 		
 		Random generator = new Random(new Long(42));
 		
@@ -174,7 +177,8 @@ public class GameModel {
 			while (!bombSet) {
 				int row = generator.nextInt(boardHeight);
 				int column = generator.nextInt(boardWidth);
-				if (boardValues3D[row][column][ZERO_FLOOR] != BOMB) {
+				if (boardValues3D[row][column][ZERO_FLOOR] != BOMB
+						&& !(row ==  clickedRow && column == clickedColumn)) {
 					boardValues3D[row][column][ZERO_FLOOR] = BOMB;
 					bombSet = true;
 				}
@@ -192,7 +196,7 @@ public class GameModel {
 			}
 		}
 	}
-	
+		
 	/**
 	 * Count the number of neighboring boxes with bombs.
 	 * <p>
@@ -380,6 +384,7 @@ public class GameModel {
 		if (!isNewGame()) {
 			resetGameValues();
 			timer.cancel();
+			controller.tick();
 		}
 	}
 	
@@ -419,6 +424,9 @@ public class GameModel {
 		
 		if (firstClick) {
 			firstClick = false;
+			
+			fillInBoard(row, column);
+			
 			GameTimer timer = new GameTimer(controller);
 			this.timer = timer;
 			// TODO not bomb on first click
@@ -518,6 +526,8 @@ public class GameModel {
 	
 	public void leftReleaseAt(int row, int column) {
 		
+		currentSmile = SMILE_NORMAL;
+		
 		int firstFloorValue = boardValues3D[pressedBoxRow][pressedBoxColumn][FIRST_FLOOR];
 		if (firstFloorValue == PRESSED) {
 			boardValues3D[pressedBoxRow][pressedBoxColumn][FIRST_FLOOR] = CLOSED;
@@ -527,7 +537,6 @@ public class GameModel {
 		if (pressedBoxRow == row && pressedBoxColumn == column) {
 			leftClickAt(row, column);
 		}
-		currentSmile = SMILE_NORMAL;
 	}
 	
 	public void bothPressAt(int row, int column) {
@@ -549,6 +558,7 @@ public class GameModel {
 	
 	public void bothReleaseAt(int row, int column) {
 		
+		currentSmile = SMILE_NORMAL;
 		// change pressed boxes to closed (as before)
 		for (ArrayList<Integer> neighbor: getNeighbors(pressedBoxRow, pressedBoxColumn)) {
 			int i = neighbor.get(0);
@@ -561,7 +571,6 @@ public class GameModel {
 		if (pressedBoxRow == row && pressedBoxColumn == column) {
 			bothClickAt(row, column);
 		}
-		currentSmile = SMILE_NORMAL;
 	}
 	//
 	// end of click event methods
@@ -627,7 +636,6 @@ public class GameModel {
 		try {
 			time = timer.getTime();
 		} catch (NullPointerException e) {}
-		
 		int numberToShow = Math.min(time, 999);
 		String numberString = numberToDisplayString(numberToShow);
 		return numberString;

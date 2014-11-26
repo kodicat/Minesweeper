@@ -15,6 +15,12 @@ public class GameTimer extends Timer {
 	 	schedule(tickTask, 0L, 1000L);
 	}
 	
+	@Override
+	public void cancel() {
+		super.cancel();
+		time = 0;
+	}
+	
 	public int getTime() {
 		return time;
 	}
@@ -30,7 +36,7 @@ public class GameTimer extends Timer {
 		public void run() {
 			// if not more than we can display
 			if (time++ < 1000) {
-				controller.tick("" + time);
+				controller.tick();
 			}
 		}
 	}

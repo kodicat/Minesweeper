@@ -26,7 +26,7 @@ public class Controller {
 		view.addSmileMouseListener(new SmileMouseListener());
 	}
 	
-	public void tick(String time) {
+	public void tick() {
 		view.resetTimer();
 	}
 	
