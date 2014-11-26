@@ -8,12 +8,11 @@ import javax.swing.SpringLayout;
 public class ScorePanel extends JPanel {
 
 	private static final long serialVersionUID = 42L;
+	
+	private final Color backgroundColor = new Color(192, 192, 192);
 
-	public ScorePanel(DisplayView bombs, SmileView smile,
-					DisplayView timer) {
-		
-		
-		setBackground(new Color(192, 192, 192));
+	public ScorePanel(DisplayView bombs, SmileView smile, DisplayView timer) {
+		setBackground(backgroundColor);
 		SpringLayout layout = new SpringLayout();
 		
 		// constraints for spring layout
@@ -24,9 +23,10 @@ public class ScorePanel extends JPanel {
 		layout.putConstraint(SpringLayout.WEST, timer, 5, SpringLayout.EAST, smile);
 		layout.putConstraint(SpringLayout.NORTH, timer, 0, SpringLayout.NORTH, bombs);
 		
-		layout.putConstraint(SpringLayout.EAST, this, 5 + timer.getWidth(), SpringLayout.WEST, timer);
-		layout.putConstraint(SpringLayout.SOUTH, this, 4, SpringLayout.SOUTH, timer);
-		
+		layout.putConstraint(SpringLayout.EAST, this, 5 + timer.getWidth(),
+													SpringLayout.WEST, timer);
+		layout.putConstraint(SpringLayout.SOUTH, this, 4,
+													SpringLayout.SOUTH, timer);
 		setLayout(layout);
 		
 		this.add(bombs);

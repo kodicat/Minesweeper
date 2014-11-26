@@ -25,17 +25,17 @@ public class MainFrame extends JFrame{
 	private static final long serialVersionUID = 42L;
 	
 	private final String PICTURES_FOLDER = "pictures/canvas/";
-	// view class instances
-	private BoardView board;
+	// view classes instances
 	private DisplayView bombs;
 	private SmileView smile;
 	private DisplayView timer;
+	private BoardView board;
 	
 	private GameModel model;
 	
-	public MainFrame(GameModel model) throws IOException
-	{
+	public MainFrame(GameModel model) throws IOException {
 		this.model = model;
+		
 		// set the icon of the frame
 		Image img = new ImageIcon(PICTURES_FOLDER + "ico.gif").getImage();
 		setIconImage(img);
@@ -48,30 +48,29 @@ public class MainFrame extends JFrame{
 		// close this frame and exit the program
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		// pack this frame with mineComponent
-		BoardView board = new BoardView(model);
-		this.board = board;
-		
-		// create JPanel with SpringLayout to put there bombs, smile and timer
+		// create necessary instances
 		DisplayView bombs = new DisplayView(model, DisplayView.BOMBS);
 		SmileView smile = new SmileView(model);
 		DisplayView timer = new DisplayView(model, DisplayView.TIMER);
+		BoardView board = new BoardView(model);
 		this.bombs = bombs;
 		this.smile = smile;
 		this.timer = timer;
+		this.board = board;
 		
+		// create JPanel with SpringLayout to put there bombs, smile and timer
 		ScorePanel scorePanel = new ScorePanel(bombs, smile, timer);
 		
-		// create upper bound panel
+		// create top upper bound panel
 		JPanel upperPanel = createHorizontalBorder("left-upper", "upper",
 													"right-upper");
-		// create middle bound panel
+		// create top middle bound panel
 		JPanel middlePanel = createHorizontalBorder("left-middle", "middle",
 													"right-middle");
-		// create left bound panel
+		// create top left bound panel
 		JPanel leftTopPanel = createSideBorder(2);
 		
-		// create right bound panel
+		// create top right bound panel
 		JPanel rightTopPanel = createSideBorder(2);
 		
 		// pack all top components to the topPanel
@@ -94,7 +93,7 @@ public class MainFrame extends JFrame{
 		boardPanel.add(board);
 		boardPanel.add(rightBottomPanel);
 		
-		// fill in bottom panel
+		// fill in bottom border
 		JPanel bottomPanel = createHorizontalBorder("left-bottom", "bottom",
 													"right-bottom");
 		
@@ -122,8 +121,7 @@ public class MainFrame extends JFrame{
 		board.removeMouseListener(listener);
 	}
 	
-	public int getNumberOfFieldMouseListeners()
-	{
+	public int getNumberOfFieldMouseListeners() {
 		return board.getMouseListeners().length;
 	}
 	
@@ -140,6 +138,9 @@ public class MainFrame extends JFrame{
 	public void repaintTimer() {
 		timer.repaint();
 	}
+	
+	//==========================================================================
+	// helper methods
 	
 	private JPanel createHorizontalBorder(String leftPic,
 			String middlePic, String rightPic) throws IOException {
@@ -172,4 +173,6 @@ public class MainFrame extends JFrame{
 		}
 		return result;
 	}
+	// end of helper methods
+	//==========================================================================
 }

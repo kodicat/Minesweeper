@@ -1,5 +1,7 @@
 package view;
-
+/**
+ * This class displays counters of bombs or timer.
+ */
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -19,11 +21,12 @@ public class DisplayView extends JComponent {
 	private final int COUNTER_WIDTH = 39;
 	private final int COUNTER_HEIGHT = 23;
 	private final String PICTURES_FOLDER = "pictures/timer/";
-	private GameModel model;
-	private String type;
+	private final String type;
 	
-	public static String BOMBS = "BOMBS";
-	public static String TIMER = "TIMER";
+	private GameModel model;
+	
+	public static final String BOMBS = "BOMBS";
+	public static final String TIMER = "TIMER";
 	
 	public DisplayView(GameModel model, String type) {
 		

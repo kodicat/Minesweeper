@@ -14,8 +14,9 @@ public class BoardView extends JComponent{
 	
 	public static final int BOX_SIZE = 16;
 	private final String PICTURES_FOLDER = "pictures/board/";
-	private GameModel model;
 	private final HashMap<Integer,String> PICTURES_MAP;
+	
+	private GameModel model;
 	
 	// show state final variables
 	private final int CLOSED = 0;
@@ -28,8 +29,7 @@ public class BoardView extends JComponent{
 	private final int ZERO_FLOOR = 0;
 	private final int FIRST_FLOOR = 1;
 	
-	public BoardView(GameModel model)
-	{
+	public BoardView(GameModel model) {
 		this.model = model;
 		int boardWidth = model.getWidth();
 		int boardHeight = model.getHeight();
@@ -47,10 +47,6 @@ public class BoardView extends JComponent{
 			result.put(keys[i], PICTURES_FOLDER + values[i] + ".png");
 		}
 		return result;
-	}
-	
-	public void reset()	{
-		this.repaint();
 	}
 	
 	@Override
