@@ -102,6 +102,10 @@ public class MainFrame extends JFrame{
 		contentPane.add(topPanel, BorderLayout.NORTH);
 		contentPane.add(boardPanel, BorderLayout.CENTER);
 		contentPane.add(bottomPanel, BorderLayout.SOUTH);
+		
+		// add menu
+		setJMenuBar(new MenuView(this));
+		
 		this.pack();
 		
 		// set location of this window in the middle
@@ -111,6 +115,7 @@ public class MainFrame extends JFrame{
 		int screenHeight = screenSize.height;
 		setLocation(screenWidth / 2 - (getWidth() / 2),
 				screenHeight / 2 - (getHeight() / 2));
+		
 	}
 	
 	public void addBoardMouseListener(MouseListener listener) {
