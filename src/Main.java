@@ -2,7 +2,7 @@ import java.awt.EventQueue;
 import java.io.IOException;
 
 import controller.Controller;
-import model.GameModel;
+import model.Game;
 import view.MainFrame;
 
 
@@ -11,7 +11,7 @@ public class Main {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				GameModel model = new GameModel(9, 9, 10);
+				Game model = new Game(9, 9, 10);
 				
 				MainFrame view = null;
 				try {

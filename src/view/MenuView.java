@@ -9,7 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import model.GameModel;
+import model.Game;
 import controller.Controller;
 
 public class MenuView extends JMenuBar {
@@ -52,7 +52,7 @@ public class MenuView extends JMenuBar {
 			view.dispose();
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					GameModel model = new GameModel(width, height, bombs);
+					Game model = new Game(width, height, bombs);
 
 					MainFrame view = null;
 					try {

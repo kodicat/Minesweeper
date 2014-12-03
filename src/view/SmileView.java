@@ -8,7 +8,7 @@ import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-import model.GameModel;
+import model.Game;
 
 public class SmileView extends JComponent {
 
@@ -18,9 +18,9 @@ public class SmileView extends JComponent {
 	private final String PICTURES_FOLDER = "pictures/smile/";
 	private final HashMap<Integer,String> PICTURES_MAP;
 	
-	private GameModel model;
+	private Game model;
 	
-	public SmileView(GameModel model) {
+	public SmileView(Game model) {
 		this.model = model;
 		PICTURES_MAP = getPicturesMap();
 		setSize(SMILE_SIZE, SMILE_SIZE);
@@ -42,7 +42,7 @@ public class SmileView extends JComponent {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		int key = model.getCurrentSmile();
+		int key = model.getSmileState();
 		String path = PICTURES_MAP.get(key);
 		Image img = new ImageIcon(path).getImage();
 		g.drawImage(img, 0, 0, SMILE_SIZE, SMILE_SIZE, this);

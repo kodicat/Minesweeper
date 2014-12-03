@@ -18,7 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import model.GameModel;
+import model.Game;
 
 public class MainFrame extends JFrame{
 
@@ -31,9 +31,9 @@ public class MainFrame extends JFrame{
 	private DisplayView timer;
 	private BoardView board;
 	
-	private GameModel model;
+	private Game model;
 	
-	public MainFrame(GameModel model) throws IOException {
+	public MainFrame(Game model) throws IOException {
 		this.model = model;
 		
 		// set the icon of the frame
@@ -82,10 +82,10 @@ public class MainFrame extends JFrame{
 		topPanel.add(middlePanel, BorderLayout.SOUTH);
 		
 		// left bottom panel
-		JPanel leftBottomPanel = createSideBorder(model.getHeight());
+		JPanel leftBottomPanel = createSideBorder(model.getBoardHeight());
 		
 		// right bottom panel
-		JPanel rightBottomPanel = createSideBorder(model.getHeight());
+		JPanel rightBottomPanel = createSideBorder(model.getBoardHeight());
 		
 		// fill in board panel
 		JPanel boardPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 0));
@@ -156,7 +156,7 @@ public class MainFrame extends JFrame{
 		JLabel picLabel = new JLabel(new ImageIcon(pic));
 		result.add(picLabel);
 		pic = ImageIO.read(new File(PICTURES_FOLDER + middlePic + ".gif"));
-		for (int i = 0; i < model.getWidth(); i++) {
+		for (int i = 0; i < model.getBoardWidth(); i++) {
 			picLabel = new JLabel(new ImageIcon(pic));
 			result.add(picLabel);
 		}

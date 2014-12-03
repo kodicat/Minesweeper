@@ -10,7 +10,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-import model.GameModel;
+import model.Game;
 
 public class DisplayView extends JComponent {
 
@@ -23,12 +23,12 @@ public class DisplayView extends JComponent {
 	private final String PICTURES_FOLDER = "pictures/timer/";
 	private final String type;
 	
-	private GameModel model;
+	private Game model;
 	
 	public static final String BOMBS = "BOMBS";
 	public static final String TIMER = "TIMER";
 	
-	public DisplayView(GameModel model, String type) {
+	public DisplayView(Game model, String type) {
 		
 		this.model = model;
 		this.type = type; 

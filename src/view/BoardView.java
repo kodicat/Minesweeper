@@ -6,7 +6,7 @@ import java.awt.Image;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import model.GameModel;
+import model.Game;
 
 public class BoardView extends JComponent{
 
@@ -16,7 +16,7 @@ public class BoardView extends JComponent{
 	private final String PICTURES_FOLDER = "pictures/board/";
 	private final HashMap<Integer,String> PICTURES_MAP;
 	
-	private GameModel model;
+	private Game model;
 	
 	// show state final variables
 	private final int CLOSED = 0;
@@ -29,10 +29,10 @@ public class BoardView extends JComponent{
 	private final int ZERO_FLOOR = 0;
 	private final int FIRST_FLOOR = 1;
 	
-	public BoardView(GameModel model) {
+	public BoardView(Game model) {
 		this.model = model;
-		int boardWidth = model.getWidth();
-		int boardHeight = model.getHeight();
+		int boardWidth = model.getBoardWidth();
+		int boardHeight = model.getBoardHeight();
 		PICTURES_MAP = getPicturesMap();
 		
 		setSize(boardWidth * BOX_SIZE, boardHeight * BOX_SIZE);
@@ -54,8 +54,8 @@ public class BoardView extends JComponent{
 		super.paintComponent(g);
 		
 		int[][][] values = model.getBoardValues();
-		for (int i = 0; i < model.getHeight(); i++) {
-			for (int j = 0; j < model.getWidth(); j++) {
+		for (int i = 0; i < model.getBoardHeight(); i++) {
+			for (int j = 0; j < model.getBoardWidth(); j++) {
 				String path = "";
 				if (values[i][j][FIRST_FLOOR] == CLOSED) {
 					path = PICTURES_FOLDER + "closed_box.png";
