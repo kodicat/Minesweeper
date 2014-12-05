@@ -3,8 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import view.SmileView;
-
 import controller.Controller;
 
 
@@ -12,12 +10,13 @@ public class Game {
 
 	private boolean isFinished;
 	private boolean firstClick;
-	
+	private int closedCellsLeft;
+	private int pressedCellRow;
+	private int pressedCellColumn;
 	private int smileState;
 	private GameTimer timer;
 	private Board board;
 	private Controller controller;
-	
 	
 	// final helper variables to indicate smiles
 	private final int SMILE_NORMAL = 0;
@@ -25,14 +24,6 @@ public class Game {
 	private final int SMILE_DEAD = 2;
 	private final int SMILE_COOL = 3;
 	private final int SMILE_SCARED = 4;
-	
-//	/**
-//	 * Number of boxes which are not opened: closed, flagged or questioned.
-//	 * <p>
-//	 * At the beginning of the game it equals to the product of boardWidth and
-//	 * boardHeight.
-//	 */
-	private int closedCellsLeft;
 	
 	// right click map
 	private HashMap<Integer,Integer> RIGHT_CLICK_MAP;
@@ -42,9 +33,6 @@ public class Game {
 		RIGHT_CLICK_MAP.put(Cell.FLAG, Cell.QUESTION);
 		RIGHT_CLICK_MAP.put(Cell.QUESTION, Cell.CLOSED);
 	}
-	
-	int pressedCellRow;
-	int pressedCellColumn;
 	
 	
 	/**
@@ -56,28 +44,15 @@ public class Game {
 	public Game(int boardWidth, int boardHeight, int numBombs) {
 		board = new Board(boardWidth, boardHeight, numBombs);
 		closedCellsLeft = boardHeight * boardWidth;
-		resetValues();
+		resetHelperValues();
 	}
 	
-	private void resetValues() {
+	private void resetHelperValues() {
 		isFinished = false;
 		firstClick = true;
 		smileState = SMILE_NORMAL;
 		pressedCellRow = -1;
 		pressedCellColumn = -1;
-	}
-	
-	/**
-	 * Check whether we can open neighbors on both click
-	 * @param row    The index of the row of current box.
-	 * @param column The index of the column of current box.
-	 * @return
-	 */
-	private boolean canOpenNeighbors(int row, int column) {
-		
-		int value = board.getCell(row, column).getValue();
-		int flags = board.flagNeighbors(row, column);
-		return value == flags;
 	}
 	
 	/**
@@ -106,58 +81,56 @@ public class Game {
 	/**
 	 * Start a new game when click on a smile.
 	 */
-	public void leftClickAtSmile() {
-		
+	
+	public void pressSmile() {
+		smileState = SMILE_PRESSED;
+	}
+	
+	public void releaseSmile() {
+		smileState = SMILE_NORMAL;
+		restart();
+	}
+	
+	public void restart() {
 		if (board.isNotNewGame()) {
 			int width = board.getWidth();
 			int height = board.getHeight();
 			board = new Board(width, height, board.getNumBombs());
 			closedCellsLeft = width * height;
-			resetValues();
+			resetHelperValues();
 			timer.cancelAndClear();
-			controller.tick();
+			controller.renewTimer();
+		}
+	}
+
+	
+	public void openPress(int row, int column) {
+		Cell cell = board.getCell(row, column);
+		if (cell.isClosed()) {
+			pressedCellRow = row;
+			pressedCellColumn = column;
+			cell.press();
+			smileState = SMILE_SCARED;
 		}
 	}
 	
-	/**
-	 * Change picture when press left button on a smile.
-	 */
-	public void pressSmile() {
-		
-		smileState = SMILE_PRESSED;
-	}
-	
-	/**
-	 * Change picture of a smile back when release the button.
-	 */
-	public void releaseSmile(int X, int Y) {
-		
+	public void openRelease(int row, int column) {
 		smileState = SMILE_NORMAL;
-		
-		if (X >= 0 && X <= SmileView.SMILE_SIZE
-				&& Y >= 0 && Y <= SmileView.SMILE_SIZE) {
-			leftClickAtSmile();
+		Cell cell = board.getCell(pressedCellRow, pressedCellColumn);
+		if (cell.isPressed()) {
+			cell.close();
 		}
-		
+		// count as click when pressed and released on the same box
+		if (pressedCellRow == row && pressedCellColumn == column) {
+			openCell(row, column);
+		}
 	}
 	
-	/**
-	 * This method changes the value from CLOSED to OPEN on the first floor of
-	 * boardValues3D with coordinates row and column.
-	 * <p>
-	 * If its corresponding value on the zero floor of boardValues3D equals to
-	 * 0 (EMPTY) the method also opens (changes from CLOSED to OPEN) its
-	 * neighbors and so on (recursive).
-	 * @param row    The index of the row of the box which was clicked on.
-	 * @param column The index of the column of the box which was clicked on.
-	 */
-	public void leftClickAt(int row, int column) {
+	public void openCell(int row, int column) {
 		
 		if (firstClick) {
 			firstClick = false;
-			
 			board.fillIn(row, column);
-			
 			GameTimer timer = new GameTimer(controller);
 			this.timer = timer;
 		}
@@ -196,54 +169,23 @@ public class Game {
 		}
 	}
 	
-	/**
-	 * Open all unflagged and unquestioned boxes near current one.
-	 * @param row    The index of the row of the box which was clicked on.
-	 * @param column The index of the column of the box which was clicked.
-	 */
-	public void bothClickAt(int row, int column) {
-		Cell cell = board.getCell(row, column);
-		if (cell.isOpen()) {
-			ArrayList<Cell> neighbors = cell.getNeighbors();
-			for (Cell neighbor: neighbors) {
-				if (canOpenNeighbors(row, column) && neighbor.isClosed()) {
-					openCell(neighbor);
-				}
-			}
-		}
-	}
-	
-	public void leftPressAt(int row, int column) {
-		Cell cell = board.getCell(row, column);
-		if (cell.isClosed()) {
-			pressedCellRow = row;
-			pressedCellColumn = column;
-			cell.press();
-			smileState = SMILE_SCARED;
-		}
-	}
-	
-	public void leftReleaseAt(int row, int column) {
-		smileState = SMILE_NORMAL;
-		Cell cell = board.getCell(pressedCellRow, pressedCellColumn);
-		if (cell.isPressed()) {
-			cell.close();
-		}
-		// count as click when pressed and released on the same box
-		if (pressedCellRow == row && pressedCellColumn == column) {
-			leftClickAt(row, column);
-		}
-	}
-	
-	public void rightPressAt(int row, int column) {
+	public void flagPress(int row, int column) {
 		Cell cell = board.getCell(row, column);
 		if (cell.isNotOpen()) {
+			pressedCellRow = row;
+			pressedCellColumn = column;
+		}
+	}
+	
+	public void flagRelease(int row, int column) {
+		if (pressedCellRow == row && pressedCellColumn == column) {
+			Cell cell = board.getCell(row, column);
 			int changeTo = RIGHT_CLICK_MAP.get(cell.getState());
 			cell.setState(changeTo);
 		}
 	}
 	
-	public void bothPressAt(int row, int column) {
+	public void openNeighborsPress(int row, int column) {
 		Cell cell = board.getCell(row, column);
 		if (cell.isOpen()) {
 			pressedCellRow = row;
@@ -257,7 +199,7 @@ public class Game {
 		}
 	}
 	
-	public void bothReleaseAt(int row, int column) {
+	public void openNeighborsRelease(int row, int column) {
 		
 		smileState = SMILE_NORMAL;
 		Cell cell = board.getCell(pressedCellRow, pressedCellColumn);
@@ -267,10 +209,46 @@ public class Game {
 				neighbor.close();
 			}
 		}
+		if (cell.isPressed()) {
+			cell.close();
+		}
 		// count as click when pressed and released on the same cell
 		if (pressedCellRow == row && pressedCellColumn == column) {
-			bothClickAt(row, column);
+			openNeighbors(row, column);
 		}
+	}
+	
+	/**
+	 * Open all non-flagged and unquestioned cells near current one if number of
+	 * bombs equals to number of flags.
+	 * @param row    The index of the row of the cell which was clicked on.
+	 * @param column The index of the column of the cell which was clicked on.
+	 */
+	public void openNeighbors(int row, int column) {
+		Cell cell = board.getCell(row, column);
+		if (cell.isOpen()) {
+			ArrayList<Cell> neighbors = cell.getNeighbors();
+			if (canOpenNeighbors(row, column)) {
+				for (Cell neighbor: neighbors) {
+					if (neighbor.isClosed()) {
+						openCell(neighbor);
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Check whether we can open neighbors on both click
+	 * @param row    The index of the row of current box.
+	 * @param column The index of the column of current box.
+	 * @return
+	 */
+	private boolean canOpenNeighbors(int row, int column) {
+		
+		int value = board.getCell(row, column).getValue();
+		int flags = board.flagNeighbors(row, column);
+		return value == flags;
 	}
 	
 	/**
@@ -290,6 +268,7 @@ public class Game {
 		}
 		return result;
 	}
+	
 	
 	public int getBoardWidth() {
 		return board.getWidth();
