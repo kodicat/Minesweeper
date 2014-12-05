@@ -308,10 +308,10 @@ public class Game {
 	
 	public String timerToShow() {
 		int time = 0;
-		// catch error if timer is not yet initialized
-		try {
+		// check if timer is not yet initialized
+		if (timer != null) {
 			time = timer.getTime();
-		} catch (NullPointerException e) {}
+		}
 		int numberToShow = Math.min(time, 999);
 		String numberString = numberToString(numberToShow);
 		return numberString;
