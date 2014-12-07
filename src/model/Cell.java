@@ -106,7 +106,7 @@ public class Cell {
 		}
 	}
 	
-	public ArrayList<Cell> getNeighbors() {
+	public ArrayList<Cell> getNeighbours() {
 		return neighbors;
 	}
 }

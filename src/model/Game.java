@@ -3,10 +3,18 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import utils.StringUtils;
 import controller.Controller;
 
 
 public class Game {
+	// final helper variables to indicate smiles
+	public static final int SMILE_NORMAL = 0;
+	public static final int SMILE_PRESSED = 1;
+	public static final int SMILE_LOSE = 2;
+	public static final int SMILE_WIN = 3;
+	public static final int SMILE_SCARED = 4;
+	
 
 	private boolean isFinished;
 	private boolean firstClick;
@@ -17,13 +25,6 @@ public class Game {
 	private GameTimer timer;
 	private Board board;
 	private Controller controller;
-	
-	// final helper variables to indicate smiles
-	private final int SMILE_NORMAL = 0;
-	private final int SMILE_PRESSED = 1;
-	private final int SMILE_DEAD = 2;
-	private final int SMILE_COOL = 3;
-	private final int SMILE_SCARED = 4;
 	
 	// right click map
 	private HashMap<Integer,Integer> RIGHT_CLICK_MAP;
@@ -60,22 +61,10 @@ public class Game {
 	 * @return True for winning and false for losing or not yet winning.
 	 */
 	private boolean wonTheGame() {
-		if (board.getNumBombs() == closedCellsLeft && isFinished == false) {
+		if (board.getBombsTotal() == closedCellsLeft && isFinished == false) {
 			return true;
 		}
 		return false;
-	}
-	
-	private String numberToString(int number) {
-		int positiveNumber = Math.abs(number);
-		String numberString = "" + number;
-		// add zeroes and/or minuses if needed to get three character string
-		if (number / 10 == 0) {
-			numberString = ((number >= 0) ? "00" : "-0") + positiveNumber;
-		} else if (number / 100 == 0) {
-			numberString = ((number >= 0) ? "0" : "-") + positiveNumber;
-		}
-		return numberString;
 	}
 	
 	/**
@@ -92,10 +81,10 @@ public class Game {
 	}
 	
 	public void restart() {
-		if (board.isNotNewGame()) {
+		if (isGameStarted()) {
 			int width = board.getWidth();
 			int height = board.getHeight();
-			board = new Board(width, height, board.getNumBombs());
+			board = new Board(width, height, board.getBombsTotal());
 			closedCellsLeft = width * height;
 			resetHelperValues();
 			timer.cancelAndClear();
@@ -104,6 +93,10 @@ public class Game {
 	}
 
 	
+	private boolean isGameStarted() {
+		return !firstClick;
+	}
+
 	public void openPress(int row, int column) {
 		Cell cell = board.getCell(row, column);
 		if (cell.isClosed()) {
@@ -127,12 +120,10 @@ public class Game {
 	}
 	
 	public void openCell(int row, int column) {
-		
 		if (firstClick) {
 			firstClick = false;
 			board.fillIn(row, column);
-			GameTimer timer = new GameTimer(controller);
-			this.timer = timer;
+			this.timer = new GameTimer(controller);
 		}
 		Cell cell = board.getCell(row, column);
 		openCell(cell);
@@ -148,20 +139,20 @@ public class Game {
 			if (cell.isBomb()) {
 				board.openBombs();
 				cell.setValue(Cell.RED_BOMB);
-				smileState = SMILE_DEAD;
+				smileState = SMILE_LOSE;
 				isFinished = true;
 				timer.cancel();
 			}
 			// open neighboring cells when clicked on empty box
 			else if (cell.isEmpty()) {
-				ArrayList<Cell> neighbors = cell.getNeighbors();
+				ArrayList<Cell> neighbors = cell.getNeighbours();
 				for (Cell neighbor: neighbors) {
 					openCell(neighbor);
 				}
 			}
 			
 			if (wonTheGame()) {
-				smileState = SMILE_COOL;
+				smileState = SMILE_WIN;
 				isFinished = true;
 				timer.cancel();
 				board.setFlags();
@@ -190,7 +181,7 @@ public class Game {
 		if (cell.isOpen()) {
 			pressedCellRow = row;
 			pressedCellColumn = column;
-			for (Cell neighbor: cell.getNeighbors()) {
+			for (Cell neighbor: cell.getNeighbours()) {
 				if (neighbor.isClosed()) {
 					neighbor.press();
 				}
@@ -204,7 +195,7 @@ public class Game {
 		smileState = SMILE_NORMAL;
 		Cell cell = board.getCell(pressedCellRow, pressedCellColumn);
 		// change pressed cells to closed (as before)
-		for (Cell neighbor: cell.getNeighbors()) {
+		for (Cell neighbor: cell.getNeighbours()) {
 			if (neighbor.isPressed()) {
 				neighbor.close();
 			}
@@ -214,7 +205,7 @@ public class Game {
 		}
 		// count as click when pressed and released on the same cell
 		if (pressedCellRow == row && pressedCellColumn == column) {
-			openNeighbors(row, column);
+			openNeighbors(cell);
 		}
 	}
 	
@@ -224,15 +215,12 @@ public class Game {
 	 * @param row    The index of the row of the cell which was clicked on.
 	 * @param column The index of the column of the cell which was clicked on.
 	 */
-	public void openNeighbors(int row, int column) {
-		Cell cell = board.getCell(row, column);
+	public void openNeighbors(Cell cell) {
 		if (cell.isOpen()) {
-			ArrayList<Cell> neighbors = cell.getNeighbors();
-			if (canOpenNeighbors(row, column)) {
+			ArrayList<Cell> neighbors = cell.getNeighbours();
+			if (canOpenNeighbors(cell)) {
 				for (Cell neighbor: neighbors) {
-					if (neighbor.isClosed()) {
 						openCell(neighbor);
-					}
 				}
 			}
 		}
@@ -240,14 +228,12 @@ public class Game {
 	
 	/**
 	 * Check whether we can open neighbors on both click
-	 * @param row    The index of the row of current box.
-	 * @param column The index of the column of current box.
+	 * @param cell    Cell to check
 	 * @return
 	 */
-	private boolean canOpenNeighbors(int row, int column) {
-		
-		int value = board.getCell(row, column).getValue();
-		int flags = board.flagNeighbors(row, column);
+	private boolean canOpenNeighbors(Cell cell) {		
+		int value = cell.getValue();
+		int flags = board.getFlaggedNeighbors(cell);
 		return value == flags;
 	}
 	
@@ -290,30 +276,17 @@ public class Game {
 	
 	
 	public String bombsToShow() {
-		int flagsOnBoard = 0;
-		for (int row = 0; row < getBoardHeight(); row++) {
-			for (int column = 0; column < getBoardWidth(); column++) {
-				Cell cell = board.getCell(row, column);
-				if (cell.isFlag()) {
-					flagsOnBoard++;
-				}
-			}
-		}
-		
-		int maxNumber = Math.max(board.getNumBombs() - flagsOnBoard, -99);
+		int bombsLeft = board.getBombsTotal() - board.getFlagsNumber();
+		int maxNumber = Math.max(bombsLeft, -99);//TODO Move duplicate clamping to StringUtils.formatNumber
 		int numberToShow = Math.min(maxNumber, 999);
-		String numberString = numberToString(numberToShow);
+		String numberString = StringUtils.formatNumber(numberToShow);
 		return numberString;
 	}
 	
 	public String timerToShow() {
-		int time = 0;
-		// check if timer is not yet initialized
-		if (timer != null) {
-			time = timer.getTime();
-		}
-		int numberToShow = Math.min(time, 999);
-		String numberString = numberToString(numberToShow);
+		int time = timer == null ? 0 : timer.getTime(); //Though not only everybody like ternary form:)
+		int numberToShow = Math.min(time, 999);//TODO Move duplicate clamping to StringUtils.formatNumber
+		String numberString = StringUtils.formatNumber(numberToShow);
 		return numberString;
 	}
 	

@@ -7,13 +7,14 @@ public class Board {
 
 	private int width;
 	private int height;
-	private int numBombs;
+	private int bombsTotal;
 	private Cell[][] board;
+	private int flagsNumber;
 	
 	public Board(int width, int height, int numBombs) {
 		this.width = width;
 		this.height = height;
-		this.numBombs = numBombs;
+		this.bombsTotal = numBombs;
 		board = new Cell[height][width];
 		
 		// fill board with cells
@@ -39,7 +40,7 @@ public class Board {
 		
 		Random generator = new Random();
 		
-		for (int i = 0; i < numBombs; i++) {
+		for (int i = 0; i < bombsTotal; i++) {
 			boolean isBomb = false;
 			while (!isBomb) {
 				int row = generator.nextInt(height);
@@ -67,7 +68,7 @@ public class Board {
 	
 	private int countBombNeighbors(Cell cell) {
 		int result = 0;
-		ArrayList<Cell> neighbors = cell.getNeighbors();
+		ArrayList<Cell> neighbors = cell.getNeighbours();
 		
 		for (Cell neighbor: neighbors) {
 			if (neighbor.isBomb()) {
@@ -102,13 +103,12 @@ public class Board {
 		return cell;
 	}
 	
-	public int flagNeighbors(int row, int column) {
-		Cell cell = board[row][column];
+	public int getFlaggedNeighbors(Cell cell) {
 		int result = 0;
-		ArrayList<Cell> neighbors = cell.getNeighbors();
+		ArrayList<Cell> neighbours = cell.getNeighbours();
 		
-		for (Cell neighbor: neighbors) {
-			if (neighbor.isFlag()) {
+		for (Cell neighbour: neighbours) {
+			if (neighbour.isFlag()) {
 				result++;
 			}
 		}
@@ -132,22 +132,6 @@ public class Board {
 		}
 	}
 	
-	public boolean isNewGame() {
-		for (int row = 0; row < height; row++) {
-			for (int column = 0; column < width; column++) {
-				Cell cell = board[row][column];
-				if (cell.isNotClosed()) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	
-	public boolean isNotNewGame() {
-		return !isNewGame();
-	}
-	
 	public int getWidth() {
 		return width;
 	}
@@ -156,8 +140,8 @@ public class Board {
 		return height;
 	}
 	
-	public int getNumBombs() {
-		return numBombs;
+	public int getBombsTotal() {
+		return bombsTotal;
 	}
 	
 	public void setFlags() {
@@ -169,5 +153,9 @@ public class Board {
 				}
 			}
 		}
+	}
+
+	public int getFlagsNumber() {
+		return flagsNumber;
 	}
 }

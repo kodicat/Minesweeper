@@ -1,30 +1,30 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import model.Game;
+import utils.MyImageCache;
 
 public class MainFrame extends JFrame{
 
 	private static final long serialVersionUID = 42L;
 	
-	private final String PICTURES_FOLDER = "pictures/canvas/";
+	private static final Image ICON = MyImageCache.getInstance().getImage(MyImageCache.ICON);
+	private static final Image LEFT_UPPER_BORDER = MyImageCache.getInstance().getImage(MyImageCache.CANVAS_LEFT_UPPER_BORDER);
+	private static final Image UPPER_BORDER = MyImageCache.getInstance().getImage(MyImageCache.CANVAS_UPPER_BORDER);
+	private static final Image RIGHT_UPPER_BORDER = MyImageCache.getInstance().getImage(MyImageCache.CANVAS_RIGHT_UPPER_BORDER);
+	private static final Image LEFT_MIDDLE_BORDER = MyImageCache.getInstance().getImage(MyImageCache.CANVAS_LEFT_MIDDLE_BORDER);
+	private static final Image MIDDLE_BORDER = MyImageCache.getInstance().getImage(MyImageCache.CANVAS_MIDDLE_BORDER);
+	private static final Image RIGHT_MIDDLE_BORDER = MyImageCache.getInstance().getImage(MyImageCache.CANVAS_RIGHT_MIDDLE_BORDER);
+	private static final Image LEFT_BOTTOM_BORDER = MyImageCache.getInstance().getImage(MyImageCache.CANVAS_LEFT_BOTTOM_BORDER);
+	private static final Image BOTTOM_BORDER = MyImageCache.getInstance().getImage(MyImageCache.CANVAS_BOTTOM_BORDER);
+	private static final Image RIGHT_BOTTOM_BORDER = MyImageCache.getInstance().getImage(MyImageCache.CANVAS_RIGHT_BOTTOM_BORDER);
+	private static final Image SIDE_BORDER = MyImageCache.getInstance().getImage(MyImageCache.CANVAS_SIDE_BORDER);
+	
 	// view classes instances
 	private DisplayView bombs;
 	private SmileView smile;
@@ -36,9 +36,7 @@ public class MainFrame extends JFrame{
 	public MainFrame(Game model) throws IOException {
 		this.model = model;
 		
-		// set the icon of the frame
-		Image img = new ImageIcon(PICTURES_FOLDER + "ico.gif").getImage();
-		setIconImage(img);
+		setIconImage(ICON);
 		
 		setTitle("Minesweeper");
 		
@@ -62,11 +60,11 @@ public class MainFrame extends JFrame{
 		ScorePanel scorePanel = new ScorePanel(bombs, smile, timer);
 		
 		// create top upper bound panel
-		JPanel upperPanel = createHorizontalBorder("left-upper", "upper",
-													"right-upper");
+		JPanel upperPanel = createHorizontalBorder(LEFT_UPPER_BORDER, UPPER_BORDER,
+													RIGHT_UPPER_BORDER);
 		// create top middle bound panel
-		JPanel middlePanel = createHorizontalBorder("left-middle", "middle",
-													"right-middle");
+		JPanel middlePanel = createHorizontalBorder(LEFT_MIDDLE_BORDER, MIDDLE_BORDER,
+				RIGHT_MIDDLE_BORDER);
 		// create top left bound panel
 		JPanel leftTopPanel = createSideBorder(2);
 		
@@ -94,8 +92,8 @@ public class MainFrame extends JFrame{
 		boardPanel.add(rightBottomPanel);
 		
 		// fill in bottom border
-		JPanel bottomPanel = createHorizontalBorder("left-bottom", "bottom",
-													"right-bottom");
+		JPanel bottomPanel = createHorizontalBorder(LEFT_BOTTOM_BORDER, BOTTOM_BORDER,
+				RIGHT_BOTTOM_BORDER);
 		
 		// fill in content pane
 		Container contentPane = getContentPane();
@@ -147,21 +145,16 @@ public class MainFrame extends JFrame{
 	//==========================================================================
 	// helper methods
 	
-	private JPanel createHorizontalBorder(String leftPic,
-			String middlePic, String rightPic) throws IOException {
+	private JPanel createHorizontalBorder(Image left, Image center, Image right) throws IOException {
 		
 		JPanel result = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 0));
-		BufferedImage pic;
-		pic = ImageIO.read(new File(PICTURES_FOLDER + leftPic + ".gif"));
-		JLabel picLabel = new JLabel(new ImageIcon(pic));
+		JLabel picLabel = new JLabel(new ImageIcon(left));
 		result.add(picLabel);
-		pic = ImageIO.read(new File(PICTURES_FOLDER + middlePic + ".gif"));
 		for (int i = 0; i < model.getBoardWidth(); i++) {
-			picLabel = new JLabel(new ImageIcon(pic));
+			picLabel = new JLabel(new ImageIcon(center));
 			result.add(picLabel);
 		}
-		pic = ImageIO.read(new File(PICTURES_FOLDER + rightPic + ".gif"));
-		picLabel = new JLabel(new ImageIcon(pic));
+		picLabel = new JLabel(new ImageIcon(right));
 		result.add(picLabel);
 		
 		return result;
@@ -171,9 +164,8 @@ public class MainFrame extends JFrame{
 		
 		JPanel result = new JPanel();
 		result.setLayout(new BoxLayout(result, BoxLayout.PAGE_AXIS));
-		BufferedImage pic = ImageIO.read(new File(PICTURES_FOLDER + "side.gif"));
 		for (int i = 0; i < height; i++) {
-			JLabel picLabel = new JLabel(new ImageIcon(pic));
+			JLabel picLabel = new JLabel(new ImageIcon(SIDE_BORDER));
 			result.add(picLabel);
 		}
 		return result;
