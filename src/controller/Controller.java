@@ -39,8 +39,8 @@ public class Controller {
 		int pressedButton = 0;
 		
 		public void mousePressed(MouseEvent e) {
-			int column = e.getX() / BoardView.BOX_SIZE;
-			int row = e.getY() / BoardView.BOX_SIZE;
+			int column = e.getX() / BoardView.CELL_SIZE;
+			int row = e.getY() / BoardView.CELL_SIZE;
 			int button = e.getButton();
 
 			if ((e.getModifiersEx() & (bothDown)) == leftButtonDown) {
@@ -63,8 +63,8 @@ public class Controller {
 		}
 		
 		public void mouseReleased(MouseEvent e) {
-			int column = e.getX() / BoardView.BOX_SIZE;
-			int row = e.getY() / BoardView.BOX_SIZE;
+			int column = e.getX() / BoardView.CELL_SIZE;
+			int row = e.getY() / BoardView.CELL_SIZE;
 
 			if (pressedButton == LEFT_BUTTON) {
 				model.openRelease(row, column);

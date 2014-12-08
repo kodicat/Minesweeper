@@ -17,6 +17,14 @@ public class Cell {
 	
 	// values
 	public static final int EMPTY = 0;
+	public static final int ONE = 0;
+	public static final int TWO = 0;
+	public static final int THREE = 0;
+	public static final int FOUR = 0;
+	public static final int FIVE = 0;
+	public static final int SIX = 0;
+	public static final int SEVEN = 0;
+	public static final int EIGHT = 0;
 	public static final int BOMB = 9;
 	public static final int RED_BOMB = 10;
 	public static final int WRONG = 11;
@@ -61,6 +69,10 @@ public class Cell {
 	
 	public boolean isNotFlag() {
 		return !isFlag();
+	}
+	
+	public boolean isQuestion() {
+		return state == QUESTION;
 	}
 	
 	public void press() {

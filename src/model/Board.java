@@ -145,12 +145,13 @@ public class Board {
 		return bombsTotal;
 	}
 	
-	public void setFlags() {
+	public void setLeftFlags() {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				Cell cell = getCell(i, j);
 				if (cell.isClosed()) {
 					cell.setFlag();
+					addFlag();
 				}
 			}
 		}

@@ -34,11 +34,28 @@ public class MyImageCache {
 	//End canvas region
 	
 	//Board  region
-	//TODO
+	public static final String BOARD_PATH = "board" + File.separator;
+	public static final String BOARD_EMPTY = "empty";
+	public static final String BOARD_ONE = "one";
+	public static final String BOARD_TWO = "two";
+	public static final String BOARD_THREE = "three";
+	public static final String BOARD_FOUR = "four";
+	public static final String BOARD_FIVE = "five";
+	public static final String BOARD_SIX = "six";
+	public static final String BOARD_SEVEN = "seven";
+	public static final String BOARD_EIGHT = "eight";
+	public static final String BOARD_MINE = "mine";
+	public static final String BOARD_RED_MINE = "red_mine";
+	public static final String BOARD_WRONG = "wrong";
+	public static final String BOARD_CLOSED = "closed";
+	public static final String BOARD_FLAG = "flag";
+	public static final String BOARD_QUESTION = "question";
+	public static final String BOARD_PRESSED = "empty";
 	//End board region
 	
 	
-	public static final String GIF = ".gif";
+	private static final String GIF = ".gif";
+	private static final String PNG = ".png";
 	
 	private static final MyImageCache instance = new MyImageCache();
 
@@ -51,6 +68,7 @@ public class MyImageCache {
 	private MyImageCache(){
 		loadSmiles();
 		loadCanvas();
+		loadBoard();
 	}
 
 	private void loadSmiles(){
@@ -75,8 +93,31 @@ public class MyImageCache {
 		images.put(CANVAS_SIDE_BORDER, new ImageIcon(getGifImagePath(CANVAS_SIDE_BORDER, CANVAS_PATH)).getImage());
 	}
 	
-	private String getGifImagePath(String imageName, String categoryPath){
+	private void loadBoard() {
+		images.put(BOARD_EMPTY, new ImageIcon(getPngImagePath(BOARD_EMPTY, BOARD_PATH)).getImage());
+		images.put(BOARD_ONE, new ImageIcon(getPngImagePath(BOARD_ONE, BOARD_PATH)).getImage());
+		images.put(BOARD_TWO, new ImageIcon(getPngImagePath(BOARD_TWO, BOARD_PATH)).getImage());
+		images.put(BOARD_THREE, new ImageIcon(getPngImagePath(BOARD_THREE, BOARD_PATH)).getImage());
+		images.put(BOARD_FOUR, new ImageIcon(getPngImagePath(BOARD_FOUR, BOARD_PATH)).getImage());
+		images.put(BOARD_FIVE, new ImageIcon(getPngImagePath(BOARD_FIVE, BOARD_PATH)).getImage());
+		images.put(BOARD_SIX, new ImageIcon(getPngImagePath(BOARD_SIX, BOARD_PATH)).getImage());
+		images.put(BOARD_SEVEN, new ImageIcon(getPngImagePath(BOARD_SEVEN, BOARD_PATH)).getImage());
+		images.put(BOARD_EIGHT, new ImageIcon(getPngImagePath(BOARD_EIGHT, BOARD_PATH)).getImage());
+		images.put(BOARD_MINE, new ImageIcon(getPngImagePath(BOARD_MINE, BOARD_PATH)).getImage());
+		images.put(BOARD_RED_MINE, new ImageIcon(getPngImagePath(BOARD_RED_MINE, BOARD_PATH)).getImage());
+		images.put(BOARD_WRONG, new ImageIcon(getPngImagePath(BOARD_WRONG, BOARD_PATH)).getImage());
+		images.put(BOARD_CLOSED, new ImageIcon(getPngImagePath(BOARD_CLOSED, BOARD_PATH)).getImage());
+		images.put(BOARD_FLAG, new ImageIcon(getPngImagePath(BOARD_FLAG, BOARD_PATH)).getImage());
+		images.put(BOARD_QUESTION, new ImageIcon(getPngImagePath(BOARD_QUESTION, BOARD_PATH)).getImage());
+		images.put(BOARD_PRESSED, new ImageIcon(getPngImagePath(BOARD_PRESSED, BOARD_PATH)).getImage());
+	}
+	
+	private String getGifImagePath(String imageName, String categoryPath) {
 		return getImagePath(imageName, categoryPath, GIF);
+	}
+	
+	private String getPngImagePath(String imageName, String categoryPath) {
+		return getImagePath(imageName, categoryPath, PNG);
 	}
 	
 	private String getImagePath(String imageName, String categoryPath, String imageType){

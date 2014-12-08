@@ -155,7 +155,7 @@ public class Game {
 				smileState = SMILE_WIN;
 				isFinished = true;
 				timer.cancel();
-				board.setFlags();
+				board.setLeftFlags();
 			}
 		}
 	}
@@ -242,18 +242,17 @@ public class Game {
 	}
 	
 	/**
-	 * Get the copy of boardValues3D to use publicly.
-	 * @return 3-D int[][][] array, the copy of variable boardValues3D.
+	 * Get the copy of 2-D array to use publicly.
+	 * @return 2-D Cell[][][] array.
 	 */
-	public int[][][] getBoardValues() {
+	public Cell[][] getBoardValues() {
 		int boardWidth = getBoardWidth();
 		int boardHeight = getBoardHeight();
-		int[][][] result = new int[boardHeight][boardWidth][2];
+		Cell[][] result = new Cell[boardHeight][boardWidth];
 		for (int row = 0; row < boardHeight; row++) {
 			for (int column = 0; column < boardWidth; column++) {
 				Cell cell = board.getCell(row, column);
-				result[row][column][0] = cell.getValue();
-				result[row][column][1] = cell.getState();
+				result[row][column] = cell;
 			}
 		}
 		return result;

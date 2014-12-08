@@ -4,78 +4,68 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.HashMap;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+
+import utils.MyImageCache;
+
+import model.Cell;
 import model.Game;
 
 public class BoardView extends JComponent{
 
 	private static final long serialVersionUID = 42L;
 	
-	public static final int BOX_SIZE = 16;
-	private final String PICTURES_FOLDER = "pictures/board/";
-	private final HashMap<Integer,String> PICTURES_MAP;
+	public static final int CELL_SIZE = 16;
+	private final HashMap<Integer,Image> BOARD_VALUES_IMAGES = new HashMap<Integer, Image>();
+	private final HashMap<Integer,Image> BOARD_STATE_IMAGES = new HashMap<Integer, Image>();
 	
 	private Game model;
-	
-	// show state final variables
-	private final int CLOSED = 0;
-	private final int OPEN = 1;
-	private final int FLAG = 2;
-	private final int QUESTION = 3;
-	private final int PRESSED = 4;
-	
-	// floor final helper board variables
-	private final int ZERO_FLOOR = 0;
-	private final int FIRST_FLOOR = 1;
 	
 	public BoardView(Game model) {
 		this.model = model;
 		int boardWidth = model.getBoardWidth();
 		int boardHeight = model.getBoardHeight();
-		PICTURES_MAP = getPicturesMap();
-		
-		setSize(boardWidth * BOX_SIZE, boardHeight * BOX_SIZE);
+		initImages();
+		setSize(boardWidth * CELL_SIZE, boardHeight * CELL_SIZE);
 	}
 	
-	private HashMap<Integer, String> getPicturesMap() {
-		int[] keys = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-		String[] values = {"empty", "one", "two", "three", "four", "five", "six",
-				"seven", "eight", "mine", "red_mine", "wrong"};
-		HashMap<Integer, String> result = new HashMap<Integer, String>();
-		for (int i = 0; i < keys.length; i++) {
-			result.put(keys[i], PICTURES_FOLDER + values[i] + ".png");
-		}
-		return result;
+	private void initImages() {
+		MyImageCache instance = MyImageCache.getInstance();
+		BOARD_VALUES_IMAGES.put(Cell.EMPTY, instance.getImage(MyImageCache.BOARD_EMPTY));
+		BOARD_VALUES_IMAGES.put(Cell.ONE, instance.getImage(MyImageCache.BOARD_ONE));
+		BOARD_VALUES_IMAGES.put(Cell.TWO, instance.getImage(MyImageCache.BOARD_TWO));
+		BOARD_VALUES_IMAGES.put(Cell.THREE, instance.getImage(MyImageCache.BOARD_THREE));
+		BOARD_VALUES_IMAGES.put(Cell.FOUR, instance.getImage(MyImageCache.BOARD_FOUR));
+		BOARD_VALUES_IMAGES.put(Cell.FIVE, instance.getImage(MyImageCache.BOARD_FIVE));
+		BOARD_VALUES_IMAGES.put(Cell.SIX, instance.getImage(MyImageCache.BOARD_SIX));
+		BOARD_VALUES_IMAGES.put(Cell.SEVEN, instance.getImage(MyImageCache.BOARD_SEVEN));
+		BOARD_VALUES_IMAGES.put(Cell.EIGHT, instance.getImage(MyImageCache.BOARD_EIGHT));
+		BOARD_VALUES_IMAGES.put(Cell.BOMB, instance.getImage(MyImageCache.BOARD_MINE));
+		BOARD_VALUES_IMAGES.put(Cell.RED_BOMB, instance.getImage(MyImageCache.BOARD_RED_MINE));
+		BOARD_VALUES_IMAGES.put(Cell.WRONG, instance.getImage(MyImageCache.BOARD_WRONG));
+		BOARD_STATE_IMAGES.put(Cell.CLOSED, instance.getImage(MyImageCache.BOARD_CLOSED));
+		BOARD_STATE_IMAGES.put(Cell.FLAG, instance.getImage(MyImageCache.BOARD_FLAG));
+		BOARD_STATE_IMAGES.put(Cell.QUESTION, instance.getImage(MyImageCache.BOARD_QUESTION));
+		BOARD_STATE_IMAGES.put(Cell.PRESSED, instance.getImage(MyImageCache.BOARD_PRESSED));
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		int[][][] values = model.getBoardValues();
+		Cell[][] values = model.getBoardValues();
 		for (int i = 0; i < model.getBoardHeight(); i++) {
 			for (int j = 0; j < model.getBoardWidth(); j++) {
-				String path = "";
-				if (values[i][j][FIRST_FLOOR] == CLOSED) {
-					path = PICTURES_FOLDER + "closed_box.png";
+				Cell cell = values[i][j];
+				Image img = null;
+				if (cell.isOpen()) {
+					img = BOARD_VALUES_IMAGES.get(cell.getValue());
 				}
-				if (values[i][j][FIRST_FLOOR] == OPEN) {
-					// get the path to the file with picture
-					path = PICTURES_MAP.get(values[i][j][ZERO_FLOOR]);
+				if (cell.isNotOpen()) {
+					img = BOARD_STATE_IMAGES.get(cell.getState());
 				}
-				if (values[i][j][FIRST_FLOOR] == FLAG) {
-					path = PICTURES_FOLDER + "flag.png";
-				}
-				if (values[i][j][FIRST_FLOOR] == QUESTION) {
-					path = PICTURES_FOLDER + "question.png";
-				}
-				if (values[i][j][FIRST_FLOOR] == PRESSED) {
-					path = PICTURES_FOLDER + "empty.png";
-				}
-				Image img = new ImageIcon(path).getImage();
-				g.drawImage(img, j * BOX_SIZE, i * BOX_SIZE,
-							BOX_SIZE, BOX_SIZE, this);
+				g.drawImage(img, j * CELL_SIZE, i * CELL_SIZE,
+							CELL_SIZE, CELL_SIZE, this);
 			}
 		}
 	}

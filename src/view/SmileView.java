@@ -25,12 +25,13 @@ public class SmileView extends JComponent {
 		setSize(SMILE_SIZE, SMILE_SIZE);
 	}
 	
-	private void  initImages() {
-		STATE_IMAGES.put(Game.SMILE_NORMAL, MyImageCache.getInstance().getImage(MyImageCache.SMILE_NORMAL));
-		STATE_IMAGES.put(Game.SMILE_PRESSED, MyImageCache.getInstance().getImage(MyImageCache.SMILE_PRESSED));
-		STATE_IMAGES.put(Game.SMILE_LOSE, MyImageCache.getInstance().getImage(MyImageCache.SMILE_LOSE));
-		STATE_IMAGES.put(Game.SMILE_WIN, MyImageCache.getInstance().getImage(MyImageCache.SMILE_WIN));
-		STATE_IMAGES.put(Game.SMILE_SCARED, MyImageCache.getInstance().getImage(MyImageCache.SMILE_SCARED));
+	private void initImages() {
+		MyImageCache instance = MyImageCache.getInstance();
+		STATE_IMAGES.put(Game.SMILE_NORMAL, instance.getImage(MyImageCache.SMILE_NORMAL));
+		STATE_IMAGES.put(Game.SMILE_PRESSED, instance.getImage(MyImageCache.SMILE_PRESSED));
+		STATE_IMAGES.put(Game.SMILE_LOSE, instance.getImage(MyImageCache.SMILE_LOSE));
+		STATE_IMAGES.put(Game.SMILE_WIN, instance.getImage(MyImageCache.SMILE_WIN));
+		STATE_IMAGES.put(Game.SMILE_SCARED, instance.getImage(MyImageCache.SMILE_SCARED));
 	}
 
 	@Override
