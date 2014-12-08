@@ -40,10 +40,10 @@ public class Game {
 	 * Game constructor.
 	 * @param boardWidth The width of the playing board.
 	 * @param boardHeight The height of the playing board.
-	 * @param numBombs The number of bombs on the playing board.
+	 * @param bombsTotal The number of bombs on the playing board.
 	 */
-	public Game(int boardWidth, int boardHeight, int numBombs) {
-		board = new Board(boardWidth, boardHeight, numBombs);
+	public Game(int boardWidth, int boardHeight, int bombsTotal) {
+		board = new Board(boardWidth, boardHeight, bombsTotal);
 		closedCellsLeft = boardHeight * boardWidth;
 		resetHelperValues();
 	}
@@ -171,26 +171,30 @@ public class Game {
 	public void flagRelease(int row, int column) {
 		if (pressedCellRow == row && pressedCellColumn == column) {
 			Cell cell = board.getCell(row, column);
-			int changeTo = RIGHT_CLICK_MAP.get(cell.getState());
+			int changeFrom = cell.getState();
+			int changeTo = RIGHT_CLICK_MAP.get(changeFrom);
+			// check for flag before and after changing
+			if (cell.isFlag()) { board.removeFlag(); }
 			cell.setState(changeTo);
+			if (cell.isFlag()) { board.addFlag(); }
 		}
 	}
 	
-	public void openNeighborsPress(int row, int column) {
+	public void openNeighboursPress(int row, int column) {
 		Cell cell = board.getCell(row, column);
 		if (cell.isOpen()) {
 			pressedCellRow = row;
 			pressedCellColumn = column;
-			for (Cell neighbor: cell.getNeighbours()) {
-				if (neighbor.isClosed()) {
-					neighbor.press();
+			for (Cell neighbour: cell.getNeighbours()) {
+				if (neighbour.isClosed()) {
+					neighbour.press();
 				}
 			}
 			smileState = SMILE_SCARED;
 		}
 	}
 	
-	public void openNeighborsRelease(int row, int column) {
+	public void openNeighboursRelease(int row, int column) {
 		
 		smileState = SMILE_NORMAL;
 		Cell cell = board.getCell(pressedCellRow, pressedCellColumn);
@@ -205,7 +209,7 @@ public class Game {
 		}
 		// count as click when pressed and released on the same cell
 		if (pressedCellRow == row && pressedCellColumn == column) {
-			openNeighbors(cell);
+			openNeighbours(cell);
 		}
 	}
 	
@@ -215,12 +219,12 @@ public class Game {
 	 * @param row    The index of the row of the cell which was clicked on.
 	 * @param column The index of the column of the cell which was clicked on.
 	 */
-	public void openNeighbors(Cell cell) {
+	public void openNeighbours(Cell cell) {
 		if (cell.isOpen()) {
-			ArrayList<Cell> neighbors = cell.getNeighbours();
+			ArrayList<Cell> neighbours = cell.getNeighbours();
 			if (canOpenNeighbors(cell)) {
-				for (Cell neighbor: neighbors) {
-						openCell(neighbor);
+				for (Cell neighbour: neighbours) {
+						openCell(neighbour);
 				}
 			}
 		}
@@ -233,7 +237,7 @@ public class Game {
 	 */
 	private boolean canOpenNeighbors(Cell cell) {		
 		int value = cell.getValue();
-		int flags = board.getFlaggedNeighbors(cell);
+		int flags = board.getFlaggedNeighbours(cell);
 		return value == flags;
 	}
 	
@@ -277,16 +281,13 @@ public class Game {
 	
 	public String bombsToShow() {
 		int bombsLeft = board.getBombsTotal() - board.getFlagsNumber();
-		int maxNumber = Math.max(bombsLeft, -99);//TODO Move duplicate clamping to StringUtils.formatNumber
-		int numberToShow = Math.min(maxNumber, 999);
-		String numberString = StringUtils.formatNumber(numberToShow);
+		String numberString = StringUtils.formatNumber(bombsLeft);
 		return numberString;
 	}
 	
 	public String timerToShow() {
 		int time = timer == null ? 0 : timer.getTime(); //Though not only everybody like ternary form:)
-		int numberToShow = Math.min(time, 999);//TODO Move duplicate clamping to StringUtils.formatNumber
-		String numberString = StringUtils.formatNumber(numberToShow);
+		String numberString = StringUtils.formatNumber(time);
 		return numberString;
 	}
 	

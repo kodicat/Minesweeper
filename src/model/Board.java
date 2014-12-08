@@ -11,11 +11,12 @@ public class Board {
 	private Cell[][] board;
 	private int flagsNumber;
 	
-	public Board(int width, int height, int numBombs) {
+	public Board(int width, int height, int bombsTotal) {
 		this.width = width;
 		this.height = height;
-		this.bombsTotal = numBombs;
+		this.bombsTotal = bombsTotal;
 		board = new Cell[height][width];
+		flagsNumber = 0;
 		
 		// fill board with cells
 		for (int i = 0; i < height; i++) {
@@ -28,7 +29,7 @@ public class Board {
 		for (int row = 0; row < height; row++) {
 			for (int column = 0; column < width; column++) {
 				Cell cell = board[row][column];
-				ArrayList<Cell> neighbors = getNeighbors(row, column);
+				ArrayList<Cell> neighbors = getNeighbours(row, column);
 				for (Cell neighbor: neighbors) {
 					cell.addNeighbor(neighbor);
 				}
@@ -59,26 +60,26 @@ public class Board {
 			for (int column = 0; column < width; column++) {
 				Cell cell = board[row][column];
 				if (cell.isNotBomb()) {
-					int value = countBombNeighbors(cell);
+					int value = countBombNeighbours(cell);
 					cell.setValue(value);
 				}
 			}
 		}
 	}
 	
-	private int countBombNeighbors(Cell cell) {
+	private int countBombNeighbours(Cell cell) {
 		int result = 0;
-		ArrayList<Cell> neighbors = cell.getNeighbours();
+		ArrayList<Cell> neighbours = cell.getNeighbours();
 		
-		for (Cell neighbor: neighbors) {
-			if (neighbor.isBomb()) {
+		for (Cell neighbour: neighbours) {
+			if (neighbour.isBomb()) {
 				result++;
 			}
 		}
 		return result;
 	}
 	
-	private ArrayList<Cell> getNeighbors(int row, int column) {
+	private ArrayList<Cell> getNeighbours(int row, int column) {
 		
 		ArrayList<Cell> result = new ArrayList<>();
 		for (int i = -1; i < 2; i++) {
@@ -89,8 +90,8 @@ public class Board {
 					if (newRow >= 0 && newRow < board.length
 						&& newColumn >= 0 && newColumn < board[0].length) {
 						
-						Cell neighbor = board[newRow][newColumn];
-						result.add(neighbor);
+						Cell neighbour = board[newRow][newColumn];
+						result.add(neighbour);
 					}
 				}
 			}
@@ -103,7 +104,7 @@ public class Board {
 		return cell;
 	}
 	
-	public int getFlaggedNeighbors(Cell cell) {
+	public int getFlaggedNeighbours(Cell cell) {
 		int result = 0;
 		ArrayList<Cell> neighbours = cell.getNeighbours();
 		
@@ -157,5 +158,13 @@ public class Board {
 
 	public int getFlagsNumber() {
 		return flagsNumber;
+	}
+	
+	public void addFlag() {
+		flagsNumber++;
+	}
+	
+	public void removeFlag() {
+		flagsNumber--;
 	}
 }

@@ -56,7 +56,7 @@ public class Controller {
 			else if ((e.getModifiersEx() & (bothDown)) == bothDown
 					|| button == BOTH_BUTTON) {
 				pressedButton = BOTH_BUTTON;
-				model.openNeighborsPress(row, column);
+				model.openNeighboursPress(row, column);
 			}
 			
 			view.repaint();
@@ -75,7 +75,7 @@ public class Controller {
 			}
 			
 			else if (pressedButton == BOTH_BUTTON) {
-				model.openNeighborsRelease(row, column);
+				model.openNeighboursRelease(row, column);
 			}
 			pressedButton = 0;
 			
